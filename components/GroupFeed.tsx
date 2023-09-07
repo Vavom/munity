@@ -23,6 +23,7 @@ import { useState } from "react";
 import Groups from "./Groups";
 import { getTimeAgo } from "./utils/dateUtils";
 import { RouteProp, ParamListBase } from "@react-navigation/native";
+import FeedItem from "./FeedItem";
 
 type Props = {
   groupId: number;
@@ -40,7 +41,7 @@ const GroupFeed = ({ groupId, navigation }: Props) => {
     setIsRefreshing(true);
     const { data, error } = await supabase
       .from("Posts")
-      .select("*")
+      .select("*, Groups(id, name)")
       .eq("group", groupId)
       .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
       .order("created_at", { ascending: false })
@@ -87,15 +88,7 @@ const GroupFeed = ({ groupId, navigation }: Props) => {
             />
           }
           onEndReachedThreshold={1}
-          renderItem={({ item }) => (
-            <Card style={{ marginVertical: 5 }} key={item.id}>
-              <Card.Content>
-                <Text variant="bodySmall">{getTimeAgo(item.created_at)}</Text>
-                <Text variant="titleLarge">{item.title}</Text>
-                <Text variant="bodyMedium">{item.content}</Text>
-              </Card.Content>
-            </Card>
-          )}
+          renderItem={({ item }) => <FeedItem item={item} />}
           keyExtractor={(post) => post.id}
         />
       </SafeAreaView>

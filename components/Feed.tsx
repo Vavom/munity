@@ -15,6 +15,8 @@ import {
   Card,
   List,
   MD2Colors,
+  Modal,
+  Portal,
   Text,
 } from "react-native-paper";
 import { Styles } from "../constants";
@@ -22,6 +24,8 @@ import { supabase } from "../supabase/supabaseClient";
 import { useState } from "react";
 import Groups from "./Groups";
 import { getTimeAgo } from "./utils/dateUtils";
+import SinglePostView from "./SinglePostView";
+import FeedItem from "./FeedItem";
 
 const Feed = () => {
   const [posts, setPosts] = React.useState<any>([]);
@@ -55,15 +59,6 @@ const Feed = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Button
-        icon="group"
-        mode="contained"
-        onPress={() => {
-          fetchPosts(true, 0);
-        }}
-      >
-        fetch posts
-      </Button>
       <SafeAreaView>
         <FlatList
           style={{ height: "100%" }}
@@ -89,17 +84,7 @@ const Feed = () => {
             />
           }
           onEndReachedThreshold={1}
-          renderItem={({ item }) => (
-            <Card style={{ marginVertical: 5 }} key={item.id}>
-              <Card.Content>
-                <Text variant="bodySmall">
-                  {item.Groups.name + " • " + getTimeAgo(item.created_at)}
-                </Text>
-                <Text variant="titleLarge">{item.title}</Text>
-                <Text variant="bodyMedium">{item.content}</Text>
-              </Card.Content>
-            </Card>
-          )}
+          renderItem={({ item }) => <FeedItem item={item} />}
           keyExtractor={(post) => post.id}
         />
       </SafeAreaView>

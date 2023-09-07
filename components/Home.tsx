@@ -18,23 +18,9 @@ import CreateGroup from "./CreateGroup";
 
 const Home = () => {
   const { user } = useUser();
-  const createPostForGroup4Rums = async () => {
-    const { error } = await supabase.from("Posts").insert({
-      group: 19,
-      user: user?.id,
-      title: "Wow this is another post",
-      content:
-        "This is some great contentThis is some great contentThis is some great contentThis is some great contentThis is some great content",
-    });
-    if (error) Alert.alert(JSON.stringify(error.message));
-  };
-
   return (
     <View style={{ height: "100%" }}>
       <CreateGroup />
-      <Button icon="group" mode="contained" onPress={createPostForGroup4Rums}>
-        Create Post
-      </Button>
       <Feed />
     </View>
   );

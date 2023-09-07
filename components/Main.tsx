@@ -12,20 +12,22 @@ import { GroupsRow } from "../types/supabaseTableTypes";
 import { supabase } from "../supabase/supabaseClient";
 import DrawerMain from "./DrawerMain";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
+import Create from "./Create";
 
 const AccountRoute = () => (
   <View style={baseStylesForApp.container}>
     <Account />
   </View>
 );
-const HomeRoute = () => (
-  <View style={baseStylesForApp.container}>
-    <Home />
-  </View>
-);
 const GroupsRoute = () => (
   <View style={baseStylesForApp.container}>
     <Groups />
+  </View>
+);
+
+const CreateRoute = () => (
+  <View style={baseStylesForApp.container}>
+    <Create />
   </View>
 );
 const SearchRoute = () => <Text>Search</Text>;
@@ -46,6 +48,12 @@ const Main = () => {
       unfocusedIcon: "magnify",
     },
     {
+      key: "create",
+      title: "Create",
+      focusedIcon: "plus-thick",
+      unfocusedIcon: "plus",
+    },
+    {
       key: "groups",
       title: "Groups",
       focusedIcon: "account-group",
@@ -61,8 +69,13 @@ const Main = () => {
 
   const HomeScreen = (HomeRoute: () => React.JSX.Element, navigation: any) => {
     const renderScene = BottomNavigation.SceneMap({
-      home: () => <HomeRoute />,
+      home: () => (
+        <View style={baseStylesForApp.container}>
+          <HomeRoute />
+        </View>
+      ),
       search: () => <SearchRoute />,
+      create: () => <CreateRoute />,
       groups: () => <GroupsRoute />,
       account: () => <AccountRoute />,
     });
@@ -93,8 +106,8 @@ export const baseStylesForApp = StyleSheet.create({
   container: {
     display: "flex",
     padding: 10,
+    paddingBottom: 0,
     flexGrow: 1,
-    marginBottom: 35,
   },
   verticallySpaced: {
     paddingTop: 4,
