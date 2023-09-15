@@ -26,6 +26,8 @@ import { useUser } from "./UserContext";
 import FeedItem from "./FeedItem";
 import CommentItem from "./CommentItem";
 import SingleCommentView from "./SingleCommentView";
+import React from "react";
+import { useAppTheme } from "../themes";
 
 type Props = {
   visible: boolean;
@@ -34,8 +36,9 @@ type Props = {
 };
 
 const SinglePostView = ({ visible, setVisible, post }: Props) => {
+  const paperTheme = useAppTheme();
   const { user } = useUser();
-  const containerStyle = { backgroundColor: "white", padding: 10 };
+  const containerStyle = { padding: 10 };
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<any>([]);
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
@@ -81,17 +84,13 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
 
   return (
     <>
-      <Portal>
+      <Portal theme={paperTheme}>
         <Modal
           style={{ height: "100%" }}
           visible={visible}
           onDismiss={() => setVisible(false)}
           contentContainerStyle={containerStyle}
-          theme={{
-            colors: {
-              backdrop: "transparent",
-            },
-          }}
+          theme={paperTheme}
         >
           <View style={{ height: "100%" }}>
             <Appbar.BackAction onPress={() => setVisible(false)} />

@@ -14,6 +14,7 @@ import { supabase } from "../supabase/supabaseClient";
 import DrawerMain from "./DrawerMain";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
 import Create from "./Create";
+import { darkTheme } from "../themes";
 
 const AccountRoute = () => (
   <View style={baseStylesForApp.container}>
@@ -88,6 +89,13 @@ const Main = () => {
     return (
       <>
         <BottomNavigation
+          shifting={false}
+          barStyle={{
+            backgroundColor: darkTheme.colors.background,
+            height: 60,
+            justifyContent: "center",
+            // paddingVertical: 10,
+          }}
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={renderScene}
@@ -113,6 +121,7 @@ export const baseStylesForApp = StyleSheet.create({
     padding: 10,
     paddingBottom: 0,
     flexGrow: 1,
+    backgroundColor: darkTheme.colors.background,
   },
   verticallySpaced: {
     paddingTop: 4,

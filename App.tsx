@@ -5,25 +5,24 @@ import "react-native-url-polyfill/auto";
 import { Styles } from "./constants";
 import Login from "./components/Login";
 import { UserContextProvider, useUser } from "./components/UserContext";
-import { DefaultTheme, PaperProvider } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import Main from "./components/Main";
-
-const theme = {
-  ...DefaultTheme,
-};
+import React from "react";
+import { darkTheme } from "./themes";
 
 const Container = () => {
   const { user } = useUser();
 
-  return user ? (
-    <PaperProvider theme={theme}>
-      <Main />
+  return (
+    <PaperProvider theme={darkTheme}>
+      {user ? (
+        <Main />
+      ) : (
+        <View style={baseStylesForApp.container}>
+          <Login />
+        </View>
+      )}
     </PaperProvider>
-  ) : (
-    <View style={baseStylesForApp.container}>
-      <View style={baseStylesForApp.verticallySpaced}></View>
-      <Login />
-    </View>
   );
 };
 
@@ -46,8 +45,9 @@ const styles = StyleSheet.create({
 
 export const baseStylesForApp = StyleSheet.create({
   container: {
-    marginTop: 40,
     padding: Styles.spacing,
+    height: "100%",
+    backgroundColor: darkTheme.colors.background,
   },
   verticallySpaced: {
     paddingTop: 4,
