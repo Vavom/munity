@@ -4,6 +4,7 @@ import { Appbar, BottomNavigation, Text } from "react-native-paper";
 import { Styles } from "../constants";
 import Account from "./Account";
 import Home from "./Home";
+import Search from "./Search";
 import Groups from "./Groups";
 import { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
@@ -30,7 +31,11 @@ const CreateRoute = () => (
     <Create />
   </View>
 );
-const SearchRoute = () => <Text>Search</Text>;
+const SearchRoute = () => (
+  <View style={baseStylesForApp.container}>
+    <Search />
+  </View>
+);
 
 const Main = () => {
   const [index, setIndex] = React.useState(0);

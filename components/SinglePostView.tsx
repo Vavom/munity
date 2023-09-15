@@ -135,7 +135,9 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
                   }
                   data={comments}
                   onEndReached={() => {
-                    fetchComments(false, page);
+                    if (!isRefreshing) {
+                      fetchComments(false, page);
+                    }
                   }}
                   ListFooterComponent={
                     <ActivityIndicator

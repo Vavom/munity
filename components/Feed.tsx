@@ -26,19 +26,43 @@ import Groups from "./Groups";
 import { getTimeAgo } from "./utils/dateUtils";
 import SinglePostView from "./SinglePostView";
 import FeedItem from "./FeedItem";
+import { useUser } from "./UserContext";
 
 const Feed = () => {
   const [posts, setPosts] = React.useState<any>([]);
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
+  const [groupIds, setGroupIds] = useState<any>([])
+  const user = useUser()
   const PAGE_LENGTH = 6;
+  const fetchGroupIds = async () => {
+    console.log("groupfetch")
+    const { data, error } = await supabase
+      .from("Groups")
+      .select("id")
+      .contains("members", [user.user?.id])
+    if (error) {
+      Alert.alert(JSON.stringify(error.message));
+    } else {
+      setGroupIds(data)
+      return data
+    }
+  }
+
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
     setIsRefreshing(true);
+    let ids
+    if (groupIds.length < 1) {
+      ids = await fetchGroupIds()
+    } else {
+      ids = groupIds
+    }
+
     const { data, error } = await supabase
       .from("Posts")
       .select("*, Groups(id, name)")
-      .in("group", [8, 5, 19])
+      .in("group", ids.map((object: { id: any; }) => object.id))
       .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
       .order("created_at", { ascending: false })
       .limit(PAGE_LENGTH);
@@ -74,7 +98,9 @@ const Feed = () => {
           }
           data={posts}
           onEndReached={() => {
-            fetchPosts(false, page);
+            if (!isRefreshing) {
+              fetchPosts(false, page);
+            }
           }}
           ListFooterComponent={
             <ActivityIndicator
