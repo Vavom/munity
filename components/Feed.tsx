@@ -34,14 +34,14 @@ const Feed = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [groupIds, setGroupIds] = useState<any>([])
-  const user = useUser()
+  const {user} = useUser()
   const PAGE_LENGTH = 6;
   const fetchGroupIds = async () => {
     console.log("groupfetch")
     const { data, error } = await supabase
       .from("Groups")
       .select("id")
-      .contains("members", [user.user?.id])
+      .contains("members", [user?.id])
     if (error) {
       Alert.alert(JSON.stringify(error.message));
     } else {
