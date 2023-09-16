@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { AppRegistry, StyleSheet, Text, View } from "react-native";
+import { AppRegistry, Dimensions, StyleSheet, Text, View } from "react-native";
 import "react-native-url-polyfill/auto";
 import { Styles } from "./constants";
 import Login from "./components/Login";
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
 export const baseStylesForApp = StyleSheet.create({
   container: {
     padding: Styles.spacing,
-    height: "100%",
+    flex: 1,
     backgroundColor: darkTheme.colors.background,
   },
   verticallySpaced: {

@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  Dimensions,
+  ImageBackground,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Styles } from "../constants";
 import { supabase } from "../supabase/supabaseClient";
 
-import { Button, TextInput } from "react-native-paper";
+import { Button, Text, TextInput } from "react-native-paper";
+import { useAppTheme } from "../themes";
 
 export default function Auth() {
+  const theme = useAppTheme();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -42,87 +50,166 @@ export default function Auth() {
   };
 
   return (
-    <View>
-      <View style={[styles.verticallySpaced, { marginTop: 20 }]}>
-        <TextInput
-          label="Username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-          placeholder="Username"
-          autoCapitalize={"none"}
-        />
+    <ImageBackground
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: Dimensions.get("window").width,
+        height: Dimensions.get("window").height,
+        borderColor: "red",
+        borderWidth: 2,
+      }}
+      source={require("../images/gradient_corner.png")}
+      // source={require("../images/gradientBackgroundBlackCropped.png")}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <View style={styles.verticallySpacedTop}>
+          {/* <TextInput
+            style={styles.textInputStyle}
+            placeholderTextColor={theme.text.textInputPlaceholder}
+            // activeOutlineColor="transparent"
+            // style={styles.textInputStyle}
+            outlineColor="transparent"
+            mode="outlined"
+            // label="Username"
+            onChangeText={(text) => setUsername(text)}
+            value={username}
+            placeholder="Username"
+            autoCapitalize={"none"}
+          /> */}
+          <TextInput
+            style={styles.textInputStyle}
+            placeholderTextColor={theme.text.textInputPlaceholder}
+            outlineColor="transparent"
+            mode="outlined"
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            placeholder="email@address.com"
+            autoCapitalize={"none"}
+          />
+          <TextInput
+            style={styles.textInputStyle}
+            placeholderTextColor={theme.text.textInputPlaceholder}
+            mode="outlined"
+            outlineColor="transparent"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            secureTextEntry={true}
+            placeholder="Password"
+            autoCapitalize={"none"}
+          />
+          <Button
+            style={styles.buttonStyle}
+            mode="contained"
+            disabled={!!loading.length}
+            loading={loading === "LOGIN"}
+            onPress={async () => await handleLogin("LOGIN", email, password)}
+          >
+            Sign in
+          </Button>
+        </View>
+        <View style={styles.verticallySpacedBottom}>
+          <View style={styles.googleandfb}>
+            <Button compact icon={"google"} mode="contained-tonal">
+              Sign in with Google
+            </Button>
+            <Button compact icon={"facebook"} mode="contained-tonal">
+              Sign in with Facebook
+            </Button>
+          </View>
+          <View style={styles.signUpStyle}>
+            <Text>Don't have an account?</Text>
+            <Button
+              mode="text"
+              disabled={!!loading.length}
+              loading={loading === "SIGNUP"}
+              onPress={async () => await handleLogin("SIGNUP", email, password)}
+            >
+              Sign up
+            </Button>
+          </View>
+          <Button
+            compact={true}
+            mode="contained-tonal"
+            disabled={!!loading.length}
+            loading={loading === "SIGNUP"}
+            onPress={async () =>
+              await handleLogin("LOGIN", "nshamash123@gmail.com", "123456")
+            }
+          >
+            Sign in nshamash123
+          </Button>
+          <Button
+            compact={true}
+            mode="contained-tonal"
+            disabled={!!loading.length}
+            loading={loading === "SIGNUP"}
+            onPress={async () =>
+              await handleLogin("LOGIN", "mshamash@hotmail.com", "123456")
+            }
+          >
+            Sign in mshamash
+          </Button>
+        </View>
       </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          label="Email"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          label="Password"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize={"none"}
-        />
-      </View>
-      <View style={[styles.verticallySpaced, { marginTop: 20 }]}>
-        <Button
-          disabled={!!loading.length}
-          loading={loading === "LOGIN"}
-          onPress={async () => await handleLogin("LOGIN", email, password)}
-        >
-          Sign in
-        </Button>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          disabled={!!loading.length}
-          loading={loading === "SIGNUP"}
-          onPress={async () => await handleLogin("SIGNUP", email, password)}
-        >
-          Sign up
-        </Button>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          disabled={!!loading.length}
-          loading={loading === "SIGNUP"}
-          onPress={async () =>
-            await handleLogin("LOGIN", "nshamash123@gmail.com", "123456")
-          }
-        >
-          Sign in nshamash123
-        </Button>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button
-          disabled={!!loading.length}
-          loading={loading === "SIGNUP"}
-          onPress={async () =>
-            await handleLogin("LOGIN", "mshamash@hotmail.com", "123456")
-          }
-        >
-          Sign in mshamash
-        </Button>
-      </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-    padding: Styles.spacing,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    flexGrow: 1,
+    // borderColor: "red",
+    // borderWidth: 3,
+    // paddingTop: 4,
+    // paddingBottom: 4,
+    // alignSelf: "stretch",
   },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
+  verticallySpacedTop: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    margin: 40,
+    flexGrow: 1,
+    gap: 5,
+    // borderColor: "red",
+    // borderWidth: 3,
+  },
+  verticallySpacedBottom: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    width: "100%",
+    flexGrow: 1,
+    // borderColor: "red",
+    // borderWidth: 3,
+    gap: 5,
+  },
+  buttonStyle: {
+    alignSelf: "center",
+    margin: 10,
+    maxWidth: 100,
+  },
+  textInputStyle: {
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  signUpStyle: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  googleandfb: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 5,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

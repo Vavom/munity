@@ -2,12 +2,13 @@ import {MD3DarkTheme, useTheme } from "react-native-paper";
 
   export const darkTheme = {
     ...MD3DarkTheme,
+    roundness: 20,
     colors: {
         ...MD3DarkTheme.colors,
         primary: "#9D44B5",
         primaryContainer: "#6D8EA0",
         secondary: "#71F79F",
-        secondaryContainer: "#71F79F",
+        secondaryContainer: "#618294",
         tertiary: "#000000",
         tertiaryContainer: "#2980b9",
         surface: "#000000",
@@ -55,6 +56,9 @@ import {MD3DarkTheme, useTheme } from "react-native-paper";
       },
       animationColors: {
         rippleColor: "rgba(113, 247, 159, 0.3)"
+      },
+      text :{
+        textInputPlaceholder: "#808080"
       }
   }
 
