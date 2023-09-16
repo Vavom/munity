@@ -18,7 +18,9 @@ const ImageUpload = ({ setImage, image }: Props) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       allowsMultipleSelection: false,
-      base64: true
+      base64: true,
+      quality: 1,
+
     });
 
     if (!result.canceled) {

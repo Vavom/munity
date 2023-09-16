@@ -34,7 +34,7 @@ const Create = () => {
     if (image?.base64 == null) {
       return
     }
-    const { data, error } = await supabase.storage.from('General Post Storage').upload("image" + image.fileSize + image.fileName, image.base64, {
+    const { data, error } = await supabase.storage.from('General Post Storage').upload("images/" + Date.now().toLocaleString() + Math.random() + image.base64.slice(0, 20).replace("/", ""), image.base64, {
       cacheControl: '3600', // Cache control options if needed
       upsert: true, // Replace if the file already exists
     });
