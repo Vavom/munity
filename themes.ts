@@ -58,6 +58,7 @@ import {MD3DarkTheme, useTheme } from "react-native-paper";
         rippleColor: "rgba(113, 247, 159, 0.3)"
       },
       text :{
+        // textInputPlaceholder: "#ffffff"
         textInputPlaceholder: "#808080"
       }
   }
