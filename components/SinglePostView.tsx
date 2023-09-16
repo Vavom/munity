@@ -29,6 +29,7 @@ import SingleCommentView from "./SingleCommentView";
 import React from "react";
 import { useAppTheme } from "../themes";
 import PostHeaderInfo from "./PostHeaderInfo";
+import BucketImage from "./BucketImage";
 
 type Props = {
   visible: boolean;
@@ -100,6 +101,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
               <Text style={{ marginBottom: 5 }} variant="titleLarge">
                 {post.title}
               </Text>
+              {post.media != null ? <BucketImage path={post.media} /> : null}
               <Text variant="bodyMedium">{post.content}</Text>
               <Divider style={{ marginVertical: 20 }} />
               <View style={styles.container}>

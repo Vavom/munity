@@ -155,7 +155,7 @@ export default function Auth() {
                 Sign up
               </Button>
             </View>
-            {/* <Button
+            <Button
               compact={true}
               mode="contained-tonal"
               disabled={!!loading.length}
@@ -176,7 +176,7 @@ export default function Auth() {
               }
             >
               Sign in mshamash
-            </Button> */}
+            </Button>
           </View>
         </View>
       </ImageBackground>

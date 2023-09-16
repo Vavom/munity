@@ -12,10 +12,13 @@ import "react-native-url-polyfill/auto";
 import { Styles } from "./constants";
 import Login from "./components/Login";
 import { UserContextProvider, useUser } from "./components/UserContext";
-import { PaperProvider } from "react-native-paper";
+import { ActivityIndicator, MD2Colors, PaperProvider } from "react-native-paper";
 import Main from "./components/Main";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { darkTheme } from "./themes";
+import { supabase } from "./supabase/supabaseClient";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 const Container = () => {
   const { user } = useUser();

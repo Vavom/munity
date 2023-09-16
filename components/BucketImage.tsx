@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Alert, Image } from 'react-native'
 import { supabase, supabaseUrl } from '../supabase/supabaseClient'
+import FullScreenImage from './FullScreenImage'
 
 interface Props {
 	path: string
@@ -12,19 +13,15 @@ export default function BucketImage({ path }: Props) {
 	useEffect(() => {
 		async function downloadImage() {
 			try {
-				console.log(path)
 				const { data, error } = await supabase.storage.from('General Post Storage').download(path)
-
 				if (error) {
 					Alert.alert(JSON.stringify(error.message));
 				}
-
 				const fr = new FileReader()
 				if (data != null) {
 					fr.readAsText(data)
 					fr.onload = () => {
 						setImageUrl(fr.result as string)
-						console.log(fr.result)
 					}
 				}
 			} catch (error) {
@@ -37,7 +34,5 @@ export default function BucketImage({ path }: Props) {
 		downloadImage()
 	}, [path])
 
-	return imageUrl ? <Image resizeMode="contain"
-		source={{ uri: 'data:image/jpeg;base64,' + imageUrl }}
-		style={{ alignSelf: 'center', width: '100%', height: undefined, aspectRatio: 1 }} /> : null
+	return imageUrl ? <FullScreenImage imageUrl={imageUrl} /> : null
 }
