@@ -1,6 +1,13 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { AppRegistry, Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  AppRegistry,
+  Dimensions,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import "react-native-url-polyfill/auto";
 import { Styles } from "./constants";
 import Login from "./components/Login";
