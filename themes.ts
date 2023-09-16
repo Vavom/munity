@@ -23,7 +23,7 @@ import {MD3DarkTheme, useTheme } from "react-native-paper";
         onTertiary: "#ffffff",
         onTertiaryContainer: "#ffffff",
         onSurface: "#ffffff", // Text
-        onSurfaceVariant: "#cccccc", // color of secondary text e.g like on the bottom navigation
+        onSurfaceVariant: "#b3b3b3", // color of secondary text e.g like on the bottom navigation
         onSurfaceDisabled: "rgba(204, 204, 204, 0.5)",
         onError: "#ffffff",
         onErrorContainer: "#ffffff",

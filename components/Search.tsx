@@ -17,8 +17,12 @@ const Search = () => {
 	const [isRefreshing, setIsRefreshing] = useState(false);
 
 	const searchGroup = async () => {
+		if (title.length === 0) {
+			setGroups(undefined)
+			return
+		}
 		setIsRefreshing(true)
-		const { data, error } = await supabase.from("Groups").select("id, name, members").filter('name', 'ilike', `%${title}%`)
+		const { data, error } = await supabase.from("Groups").select("id, name, members").filter('name', 'ilike', `%${title}%`).limit(10)
 		if (error) Alert.alert(JSON.stringify(error.message));
 		setGroups(data)
 		setIsRefreshing(false)

@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import "react-native-url-polyfill/auto";
 import { Database } from "../types/supabase";
 
-const supabaseUrl = "https://cqprbrpcobkjzlqbngdu.supabase.co";
+export const supabaseUrl = "https://cqprbrpcobkjzlqbngdu.supabase.co";
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_KEY as string;
 const ExpoSecureStoreAdapter = {
   getItem: (key: string) => {

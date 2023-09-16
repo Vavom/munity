@@ -36,6 +36,7 @@ const Feed = () => {
   const [groupIds, setGroupIds] = useState<any>([])
   const {user} = useUser()
   const PAGE_LENGTH = 6;
+
   const fetchGroupIds = async () => {
     console.log("groupfetch")
     const { data, error } = await supabase

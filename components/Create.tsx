@@ -12,23 +12,52 @@ import { supabase } from "../supabase/supabaseClient";
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { useUser } from "./UserContext";
 import CreateStepper from "./CreateStepper";
+import { ImagePickerAsset } from "expo-image-picker";
+
 
 const Create = () => {
   const [step, setStep] = useState(0);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [image, setImage] = useState<ImagePickerAsset | null | undefined>(null);
   const [selectedGroup, setSelectedGroup] = useState<null | number>(null);
   const { user } = useUser();
+
+  const uploadImage = async () => {
+    // Implement your image upload logic here, e.g., send it to a server
+    console.log(image)
+    if (image === null) {
+      return
+    }
+
+    // Create a Blob from the file data
+    if (image?.base64 == null) {
+      return
+    }
+    const { data, error } = await supabase.storage.from('General Post Storage').upload("image" + image.fileSize + image.fileName, image.base64, {
+      cacheControl: '3600', // Cache control options if needed
+      upsert: true, // Replace if the file already exists
+    });
+    if (error) {
+      if (error) Alert.alert(JSON.stringify(error.message));
+    } else {
+      console.log(data.path)
+      return data.path
+    }
+  };
+
   const createPost = async () => {
     if (selectedGroup === null) {
       Alert.alert("Please select a group");
       return;
     }
+    const media = await uploadImage()
     const { error } = await supabase.from("Posts").insert({
       group: selectedGroup,
       user: user?.id,
       title,
       content,
+      media
     });
     if (error) Alert.alert(JSON.stringify(error.message));
   };
@@ -43,8 +72,10 @@ const Create = () => {
         step={step}
         title={title}
         setTitle={setTitle}
+        setImage={setImage}
+        image={image}
       />
-      {step === 1 ? (
+      {step === 2 ? (
         <>
           <Button
             style={{ margin: 20, marginBottom: 5 }}

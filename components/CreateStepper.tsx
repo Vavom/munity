@@ -1,14 +1,17 @@
 import {
   ActivityIndicator,
+  Button,
   List,
   MD2Colors,
   TextInput,
 } from "react-native-paper";
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { useState, useEffect } from "react";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
+import ImageUpload from "./ImageUpload";
+import { ImagePickerAsset } from "expo-image-picker";
 
 type Props = {
   step: number;
@@ -18,6 +21,8 @@ type Props = {
   selectedGroup: null | number;
   setContent: React.Dispatch<React.SetStateAction<string>>;
   content: string;
+  setImage: React.Dispatch<React.SetStateAction<ImagePickerAsset | null | undefined>>;
+  image: ImagePickerAsset | null | undefined
 };
 const CreateStepper = ({
   step,
@@ -27,6 +32,8 @@ const CreateStepper = ({
   selectedGroup,
   setContent,
   setSelectedGroup,
+  setImage,
+  image
 }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const { user } = useUser();
@@ -70,7 +77,9 @@ const CreateStepper = ({
           />
         </>
       );
-    case 1: {
+    case 1:
+      return <ImageUpload setImage={setImage} image={image} />
+    case 2:
       return (
         <>
           {noGroupsYet ? (
@@ -98,8 +107,8 @@ const CreateStepper = ({
           )}
         </>
       );
-    }
     default:
+      return <></>
       break;
   }
 };

@@ -1,9 +1,13 @@
-import { Button, Card, Text, TouchableRipple } from "react-native-paper";
+import { Avatar, Button, Card, Text, TouchableRipple } from "react-native-paper";
 import { getTimeAgo } from "./utils/dateUtils";
 import { useState } from "react";
 import SinglePostView from "./SinglePostView";
 import React from "react";
-import { useAppTheme } from "../themes";
+import { darkTheme, useAppTheme } from "../themes";
+import { View, Image } from "react-native";
+import stringToColor from "./utils/colourUtils";
+import PostHeaderInfo from "./PostHeaderInfo";
+import BucketImage from "./BucketImage";
 
 type Props = {
   item: any;
@@ -12,6 +16,7 @@ const FeedItem = ({ item }: Props) => {
   const theme = useAppTheme();
   const [visible, setVisible] = useState(false);
   const [clickedPost, setClickedPost] = useState<any>(null);
+
   return (
     <>
       {clickedPost !== null ? (
@@ -32,13 +37,12 @@ const FeedItem = ({ item }: Props) => {
       >
         <Card>
           <Card.Content>
-            <Text style={{ marginBottom: 10 }} variant="bodySmall">
-              {item.Groups.name + " • " + getTimeAgo(item.created_at) + item.id}
-            </Text>
+            <PostHeaderInfo item={item} />
             <Text style={{ marginBottom: 5 }} variant="titleLarge">
               {item.title}
             </Text>
-            <Text variant="bodyMedium">{item.content}</Text>
+            {item.media != null ? <BucketImage path={item.media} /> : null}
+            <Text style={{ color: theme.colors.onSurfaceVariant }} variant="bodyMedium">{item.content}</Text>
           </Card.Content>
         </Card>
       </TouchableRipple>

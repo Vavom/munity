@@ -28,6 +28,7 @@ import CommentItem from "./CommentItem";
 import SingleCommentView from "./SingleCommentView";
 import React from "react";
 import { useAppTheme } from "../themes";
+import PostHeaderInfo from "./PostHeaderInfo";
 
 type Props = {
   visible: boolean;
@@ -95,9 +96,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
           <View style={{ height: "100%" }}>
             <Appbar.BackAction onPress={() => setVisible(false)} />
             <View style={{ marginHorizontal: 20 }}>
-              <Text style={{ marginBottom: 10 }} variant="bodySmall">
-                {post.Groups.name + " • " + getTimeAgo(post.created_at)}
-              </Text>
+              <PostHeaderInfo item={post} />
               <Text style={{ marginBottom: 5 }} variant="titleLarge">
                 {post.title}
               </Text>

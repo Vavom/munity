@@ -20,7 +20,6 @@ const Home = () => {
   const { user } = useUser();
   return (
     <View style={{ height: "100%" }}>
-      <CreateGroup />
       <Feed />
     </View>
   );
