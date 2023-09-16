@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import {
   Alert,
   Dimensions,
+  Image,
   ImageBackground,
   StyleSheet,
   View,
 } from "react-native";
 import { Styles } from "../constants";
 import { supabase } from "../supabase/supabaseClient";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { Button, Text, TextInput } from "react-native-paper";
 import { useAppTheme } from "../themes";
@@ -64,9 +66,9 @@ export default function Auth() {
           // borderColor: "red",
           // borderWidth: 2,
         }}
-        source={require("../images/cloudBlack.png")}
+        source={require("../images/corners.png")}
         // source={require("../images/gradientBackgroundBlackCropped.png")}
-        resizeMode="stretch"
+        resizeMode="cover"
       >
         <View style={styles.container}>
           <View style={styles.verticallySpacedTop}>
@@ -83,36 +85,53 @@ export default function Auth() {
             placeholder="Username"
             autoCapitalize={"none"}
           /> */}
-            <TextInput
-              style={styles.textInputStyle}
-              placeholderTextColor={theme.text.textInputPlaceholder}
-              outlineColor="transparent"
-              mode="outlined"
-              onChangeText={(text) => setEmail(text)}
-              value={email}
-              placeholder="email@address.com"
-              autoCapitalize={"none"}
+            <Image
+              resizeMode="contain"
+              style={styles.logoStyle}
+              source={require("../images/munityWhite.png")}
             />
-            <TextInput
-              style={styles.textInputStyle}
-              placeholderTextColor={theme.text.textInputPlaceholder}
-              mode="outlined"
-              outlineColor="transparent"
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-              secureTextEntry={true}
-              placeholder="Password"
-              autoCapitalize={"none"}
-            />
-            <Button
-              style={styles.buttonStyle}
-              mode="contained"
-              disabled={!!loading.length}
-              loading={loading === "LOGIN"}
-              onPress={async () => await handleLogin("LOGIN", email, password)}
-            >
-              Sign in
-            </Button>
+            <View style={styles.signInContainer}>
+              <TextInput
+                style={styles.textInputStyle}
+                placeholderTextColor={theme.text.textInputPlaceholder}
+                // outlineColor="transparent"
+                mode="outlined"
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                placeholder="email@address.com"
+                autoCapitalize={"none"}
+              />
+              <TextInput
+                style={styles.textInputStyle}
+                placeholderTextColor={theme.text.textInputPlaceholder}
+                mode="outlined"
+                // outlineColor="transparent"
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                secureTextEntry={true}
+                placeholder="Password"
+                autoCapitalize={"none"}
+              />
+              <LinearGradient
+                colors={["#000A62", "#9C00B6"]} // Define your gradient colors
+                start={{ x: 0, y: 0 }} // Start from the left
+                end={{ x: 1, y: 0 }} // End at the right
+                style={styles.buttonStyle}
+              >
+                <Button
+                  buttonColor="transparent"
+                  contentStyle={{ width: "auto" }}
+                  mode="contained"
+                  disabled={!!loading.length}
+                  loading={loading === "LOGIN"}
+                  onPress={async () =>
+                    await handleLogin("LOGIN", email, password)
+                  }
+                >
+                  {"Sign in"}
+                </Button>
+              </LinearGradient>
+            </View>
           </View>
           <View style={styles.verticallySpacedBottom}>
             <View style={styles.googleandfb}>
@@ -171,6 +190,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     flexGrow: 1,
+    // backgroundColor: "black",
     // paddingTop: 4,
     // paddingBottom: 4,
     // alignSelf: "stretch",
@@ -178,7 +198,7 @@ const styles = StyleSheet.create({
   verticallySpacedTop: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-end",
+    justifyContent: "space-evenly",
     margin: 40,
     flexGrow: 1,
     gap: 5,
@@ -198,11 +218,17 @@ const styles = StyleSheet.create({
   buttonStyle: {
     alignSelf: "center",
     margin: 10,
-    maxWidth: 100,
+    width: "auto",
+    borderRadius: 20,
   },
   textInputStyle: {
-    backgroundColor: "white",
+    backgroundColor: "black",
     borderRadius: 10,
+  },
+  signInContainer: {
+    backgroundColor: "black",
+    padding: 10,
+    borderRadius: 20,
   },
   signUpStyle: {
     display: "flex",
@@ -216,5 +242,10 @@ const styles = StyleSheet.create({
     gap: 5,
     alignItems: "center",
     justifyContent: "center",
+  },
+  logoStyle: {
+    alignSelf: "center",
+    width: 200,
+    height: 60,
   },
 });
