@@ -27,14 +27,14 @@ export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isValidUsername, setIsValidUsername] = useState(false);
 
-  const validateUsername = (text) => {
+  const validateUsername = (text: string) => {
     // Add unique username check here
     const isValid = text.length >= 6;
     setIsValidUsername(isValid);
     setUsername(text);
   };
 
-  const validatePassword = (text) => {
+  const validatePassword = (text: string) => {
     // Implement your password validation logic here
     // For example, you can check if the password meets certain criteria
     const isValid = text.length >= 6; // Change this condition as needed
@@ -42,7 +42,7 @@ export default function Auth() {
     setPassword(text);
   };
 
-  const validateEmail = (text) => {
+  const validateEmail = (text: string) => {
     // Use a regular expression to validate the email format
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     const isValid = emailPattern.test(text);
@@ -279,9 +279,9 @@ export default function Auth() {
                     mode="text"
                     textColor={theme.colors.secondary}
                     onPress={() => setIsSignUp(true)}
-                    // onPress={async () =>
-                    //   await handleLogin("SIGNUP", email, password)
-                    // }
+                  // onPress={async () =>
+                  //   await handleLogin("SIGNUP", email, password)
+                  // }
                   >
                     Sign up
                   </Button>
@@ -294,9 +294,9 @@ export default function Auth() {
                   mode="text"
                   textColor={theme.colors.secondary}
                   onPress={() => setIsSignUp(false)}
-                  // onPress={async () =>
-                  //   await handleLogin("SIGNUP", email, password)
-                  // }
+                // onPress={async () =>
+                //   await handleLogin("SIGNUP", email, password)
+                // }
                 >
                   Sign In
                 </Button>
