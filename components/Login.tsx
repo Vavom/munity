@@ -11,8 +11,10 @@ import { Styles } from "../constants";
 import { supabase } from "../supabase/supabaseClient";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Portal, Text, TextInput } from "react-native-paper";
 import { useAppTheme } from "../themes";
+import ConfirmationModal, { ConfirmationType } from "./ConfirmationModal";
+import GradientButton from "./GradientButton";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,6 +28,7 @@ export default function Auth() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isValidUsername, setIsValidUsername] = useState(false);
+  const [showConfirmEmailModal, setShowConfirmEmailModal] = useState(false);
 
   const validateUsername = (text: string) => {
     // Add unique username check here
@@ -62,9 +65,10 @@ export default function Auth() {
     if (user) {
       const { error } = await supabase
         .from("profiles")
-        .insert([{ id: user.id, username: username, email: email }]);
+        .insert([{ id: user.id, username, email }]);
       if (error) Alert.alert(JSON.stringify(error));
     }
+    setShowConfirmEmailModal(true);
     return signUp;
   };
 
@@ -105,6 +109,11 @@ export default function Auth() {
               source={require("../images/munityWhite.png")}
             />
             <View style={styles.signInContainer}>
+              <ConfirmationModal
+                confirmationType={ConfirmationType.CONFIRM_EMAIL}
+                setVisible={setShowConfirmEmailModal}
+                isVisible={showConfirmEmailModal}
+              />
               {isSignUp ? (
                 <TextInput
                   style={styles.textInputStyle}
@@ -201,47 +210,40 @@ export default function Auth() {
                 placeholder="Password"
                 autoCapitalize={"none"}
               />
-              <LinearGradient
-                colors={["#000A62", "#9C00B6"]} // Define your gradient colors
-                start={{ x: 0, y: 0 }} // Start from the left
-                end={{ x: 1, y: 0 }} // End at the right
-                style={styles.buttonStyle}
-              >
-                {isSignUp ? (
-                  <Button
-                    buttonColor="transparent"
-                    contentStyle={{ width: "auto" }}
-                    mode="contained"
-                    disabled={
-                      !!loading.length ||
-                      !isPasswordValid ||
-                      !isValidEmail ||
-                      !isValidUsername
-                    }
-                    loading={loading === "SIGNUP"}
-                    onPress={async () =>
-                      await handleLogin("SIGNUP", email, password)
-                    }
-                  >
-                    {"Sign Up"}
-                  </Button>
-                ) : (
-                  <Button
-                    buttonColor="transparent"
-                    contentStyle={{ width: "auto" }}
-                    mode="contained"
-                    disabled={
-                      !!loading.length || !isPasswordValid || !isValidEmail
-                    }
-                    loading={loading === "LOGIN"}
-                    onPress={async () =>
-                      await handleLogin("LOGIN", email, password)
-                    }
-                  >
-                    {"Sign in"}
-                  </Button>
-                )}
-              </LinearGradient>
+              {isSignUp ? (
+                <GradientButton
+                  buttonColor="transparent"
+                  contentStyle={{ width: "auto" }}
+                  mode="contained"
+                  disabled={
+                    !!loading.length ||
+                    !isPasswordValid ||
+                    !isValidEmail ||
+                    !isValidUsername
+                  }
+                  loading={loading === "SIGNUP"}
+                  onPress={async () =>
+                    await handleLogin("SIGNUP", email, password)
+                  }
+                >
+                  {"Sign Up"}
+                </GradientButton>
+              ) : (
+                <GradientButton
+                  buttonColor="transparent"
+                  contentStyle={{ width: "auto" }}
+                  mode="contained"
+                  disabled={
+                    !!loading.length || !isPasswordValid || !isValidEmail
+                  }
+                  loading={loading === "LOGIN"}
+                  onPress={async () =>
+                    await handleLogin("LOGIN", email, password)
+                  }
+                >
+                  {"Sign in"}
+                </GradientButton>
+              )}
             </View>
           </View>
           <View style={styles.verticallySpacedBottom}>
@@ -279,9 +281,9 @@ export default function Auth() {
                     mode="text"
                     textColor={theme.colors.secondary}
                     onPress={() => setIsSignUp(true)}
-                  // onPress={async () =>
-                  //   await handleLogin("SIGNUP", email, password)
-                  // }
+                    // onPress={async () =>
+                    //   await handleLogin("SIGNUP", email, password)
+                    // }
                   >
                     Sign up
                   </Button>
@@ -294,9 +296,9 @@ export default function Auth() {
                   mode="text"
                   textColor={theme.colors.secondary}
                   onPress={() => setIsSignUp(false)}
-                // onPress={async () =>
-                //   await handleLogin("SIGNUP", email, password)
-                // }
+                  // onPress={async () =>
+                  //   await handleLogin("SIGNUP", email, password)
+                  // }
                 >
                   Sign In
                 </Button>
