@@ -11,7 +11,7 @@ const FeedItemLayout = ({ item }: Props) => {
   const theme = useAppTheme();
   return (
     <>
-      <View style={{ margin: 8 }}>
+      <View style={{ marginHorizontal: 8, marginVertical: 12 }}>
         <PostHeaderInfo item={item} />
         <Text style={{ marginBottom: 5 }} variant="titleLarge">
           {item.title}
@@ -24,7 +24,7 @@ const FeedItemLayout = ({ item }: Props) => {
           {item.content}
         </Text>
       </View>
-      <Divider style={{ marginTop: 8, opacity: 0.4 }} />
+      <Divider style={{ opacity: 0.4 }} />
     </>
   );
 };
