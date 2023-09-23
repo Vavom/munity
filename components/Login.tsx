@@ -28,7 +28,6 @@ export default function Auth() {
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [isValidUsername, setIsValidUsername] = useState(false);
-  const [showConfirmEmailModal, setShowConfirmEmailModal] = useState(false);
 
   const validateUsername = (text: string) => {
     // Add unique username check here
@@ -66,7 +65,6 @@ export default function Auth() {
         .insert([{ id: user.id, username, email }]);
       if (error) Alert.alert(JSON.stringify(error));
     }
-    setShowConfirmEmailModal(true);
     return signUp;
   };
 
@@ -107,11 +105,6 @@ export default function Auth() {
               source={require("../images/munityWhite.png")}
             />
             <View style={styles.signInContainer}>
-              <ConfirmationModal
-                confirmationType={ConfirmationType.CONFIRM_EMAIL}
-                setVisible={setShowConfirmEmailModal}
-                isVisible={showConfirmEmailModal}
-              />
               {isSignUp ? (
                 <TextInput
                   style={styles.textInputStyle}
