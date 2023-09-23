@@ -7,6 +7,7 @@ import GradientButton from "./GradientButton";
 
 export enum ConfirmationType {
   CONFIRM_EMAIL,
+  POST_CREATION,
 }
 
 type Props = {
@@ -25,10 +26,27 @@ const ConfirmationModal = ({
     <Text>Please confirm your email, check your email app.</Text>
   );
 
+  const confirmCreatedPostContent = (
+    <Text>Please confirm your email, check your email app.</Text>
+  );
+
   const getModalContent = () => {
     switch (confirmationType) {
       case ConfirmationType.CONFIRM_EMAIL:
         return confirmEmailContent;
+      case ConfirmationType.POST_CREATION:
+        return confirmCreatedPostContent;
+      default:
+        throw new Error("It broke");
+    }
+  };
+
+  const getModalAction = () => {
+    switch (confirmationType) {
+      case ConfirmationType.CONFIRM_EMAIL:
+        return () => {};
+      case ConfirmationType.POST_CREATION:
+        return () => {};
       default:
         throw new Error("It broke");
     }
@@ -71,7 +89,7 @@ const ConfirmationModal = ({
           buttonColor="transparent"
           contentStyle={{ width: "auto" }}
           mode="contained"
-          onPress={() => {}}
+          onPress={getModalAction}
         >
           {"Confirm"}
         </GradientButton>
