@@ -3,6 +3,7 @@ import { Text } from "react-native-paper";
 import { BlurView } from "expo-blur";
 import { useAppTheme } from "../themes";
 import React from "react";
+import GradientButton from "./GradientButton";
 
 export enum ConfirmationType {
   CONFIRM_EMAIL,
@@ -66,6 +67,14 @@ const ConfirmationModal = ({
         }}
       >
         {getModalContent()}
+        <GradientButton
+          buttonColor="transparent"
+          contentStyle={{ width: "auto" }}
+          mode="contained"
+          onPress={() => {}}
+        >
+          {"Confirm"}
+        </GradientButton>
       </Modal>
     </Portal>
   );
