@@ -59,9 +59,7 @@ export default function Auth() {
       password,
       options: { data: { name: username } },
     });
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { user } = signUp.data;
     if (user) {
       const { error } = await supabase
         .from("profiles")
