@@ -41,7 +41,8 @@ export default function BucketImage({ path }: Props) {
     <FullScreenImage imageUrl={imageUrl} />
   ) : (
     <ActivityIndicator
-      style={{ margin: 20, width: "100%", aspectRatio: 1 }}
+      style={{ width: "100%", aspectRatio: 1 }}
+      size={30}
       animating={true}
       color={MD2Colors.purple100}
     />
