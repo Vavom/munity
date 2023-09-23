@@ -16,13 +16,16 @@ const FeedItemLayout = ({ item }: Props) => {
         <Text style={{ marginBottom: 5 }} variant="titleLarge">
           {item.title}
         </Text>
-        {item.media != null ? <BucketImage path={item.media} /> : null}
-        <Text
-          style={{ color: theme.colors.onSurfaceVariant }}
-          variant="bodyMedium"
-        >
-          {item.content}
-        </Text>
+        {item.media != null ? (
+          <BucketImage path={item.media} />
+        ) : (
+          <Text
+            style={{ color: theme.colors.onSurfaceVariant }}
+            variant="bodyMedium"
+          >
+            {item.content}
+          </Text>
+        )}
       </View>
       <Divider style={{ opacity: 0.4 }} />
     </>

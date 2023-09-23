@@ -35,47 +35,50 @@ const Feed = () => {
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
-  const [groupIds, setGroupIds] = useState<any>([])
-  const { user } = useUser()
+  const [groupIds, setGroupIds] = useState<any>([]);
+  const { user } = useUser();
   const PAGE_LENGTH = 6;
 
   const fetchGroupIds = async () => {
-    console.log("groupfetch")
+    console.log("groupfetch");
     const { data, error } = await supabase
       .from("Groups")
       .select("id")
-      .contains("members", [user?.id])
+      .contains("members", [user?.id]);
     if (error) {
       Alert.alert(JSON.stringify(error.message));
     } else {
-      setGroupIds(data)
-      return data
+      setGroupIds(data);
+      return data;
     }
-  }
+  };
 
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
     setIsRefreshing(true);
-    const storedPosts = await AsyncStorage.getItem('feed-posts')
-    const pageStored = JSON.parse(await AsyncStorage.getItem('feed-posts-page') ?? "0")
+    const storedPosts = await AsyncStorage.getItem("feed-posts");
+    const pageStored = JSON.parse(
+      (await AsyncStorage.getItem("feed-posts-page")) ?? "0"
+    );
     if (!shouldClearData && page === 0 && storedPosts !== null) {
-      console.log('here1')
-      setPosts(JSON.parse(storedPosts))
-      setPage(pageStored)
+      setPosts(JSON.parse(storedPosts));
+      setPage(pageStored);
     } else {
-      await AsyncStorage.removeItem('feed-posts')
-      await AsyncStorage.removeItem('feed-posts-page')
-      console.log('here')
-      let ids
+      await AsyncStorage.removeItem("feed-posts");
+      await AsyncStorage.removeItem("feed-posts-page");
+      let ids;
       if (groupIds.length < 1) {
-        ids = await fetchGroupIds()
+        ids = await fetchGroupIds();
       } else {
-        ids = groupIds
+        ids = groupIds;
       }
 
       const { data, error } = await supabase
         .from("Posts")
         .select("*, Groups(id, name)")
-        .in("group", ids.map((object: { id: any; }) => object.id))
+        .in(
+          "group",
+          ids.map((object: { id: any }) => object.id)
+        )
         .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
         .order("created_at", { ascending: false })
         .limit(PAGE_LENGTH);
@@ -85,20 +88,24 @@ const Feed = () => {
       } else {
         if (shouldClearData) {
           setPosts(() => {
-            AsyncStorage.setItem('feed-posts', JSON.stringify(data))
-            return data
+            AsyncStorage.setItem("feed-posts", JSON.stringify(data));
+            return data;
           });
           setPage(1);
-          await AsyncStorage.setItem('feed-posts-page', JSON.stringify(1))
-
+          await AsyncStorage.setItem("feed-posts-page", JSON.stringify(1));
         } else {
           setPosts((prevData: any) => {
-            AsyncStorage.setItem('feed-posts', JSON.stringify([...prevData, ...data]))
-            return [...prevData, ...data]
+            AsyncStorage.setItem(
+              "feed-posts",
+              JSON.stringify([...prevData, ...data])
+            );
+            return [...prevData, ...data];
           });
           setPage(page + 1);
-          await AsyncStorage.setItem('feed-posts-page', JSON.stringify(page + 1))
-
+          await AsyncStorage.setItem(
+            "feed-posts-page",
+            JSON.stringify(page + 1)
+          );
         }
       }
     }
@@ -108,11 +115,13 @@ const Feed = () => {
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView>
-        <FeedList isPullDownRefreshing={isPullDownRefreshing}
+        <FeedList
+          isPullDownRefreshing={isPullDownRefreshing}
           fetchPosts={fetchPosts}
           posts={posts}
           page={page}
-          isRefreshing={isRefreshing} />
+          isRefreshing={isRefreshing}
+        />
       </SafeAreaView>
     </View>
   );
