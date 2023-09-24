@@ -11,7 +11,6 @@ type Props = {
 };
 
 const SearchItem = ({ group, groupIds, joinGroup }: Props) => {
-  console.log({ theID: group.id, groupIds });
   return (
     <View
       style={{

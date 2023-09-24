@@ -9,7 +9,7 @@ import SearchItem from "./SearchItem";
 const Search = () => {
   const [title, setTitle] = useState("");
   const [groups, setGroups] = useState<any>();
-  const { user, updateUser } = useUser();
+  const { user, refetchUser } = useUser();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [groupIds, setGroupIds] = useState<number[]>(user?.groups ?? []);
 
@@ -30,29 +30,25 @@ const Search = () => {
   };
 
   const joinGroup = async (id: number) => {
-    console.log(user);
+    setGroupIds([...groupIds, id]);
     if (user === null) {
-      console.log("here");
       return;
     }
 
     const { data, error } = await supabase
       .from("Users")
-      .update({ groups: [...user.groups, id] })
+      .update({ groups: [...new Set([...user.groups, ...groupIds, id])] })
       .eq("id", user.id)
       .select("*")
       .single();
+
+    user.groups = [...new Set([...user.groups, ...groupIds, id])];
 
     //Update group IDs
 
     if (error) {
       Alert.alert(JSON.stringify(error.message));
-    } else {
-      console.log(data);
-      updateUser(data);
-      setGroupIds([...groupIds, id]);
     }
-    console.log(data);
   };
 
   useEffect(() => {

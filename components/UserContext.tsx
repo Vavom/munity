@@ -9,10 +9,12 @@ export const UserContext = createContext<{
   session: Session | null;
   user: UsersRow | null;
   updateUser: (user: UsersRow) => UsersRow | null;
+  refetchUser: () => UsersRow | null;
 }>({
   userAuth: null,
   session: null,
   user: null,
+  refetchUser: () => null,
   updateUser: () => null,
 });
 
@@ -20,23 +22,23 @@ export const UserContextProvider = (props: any) => {
   const [session, setSession] = useState<Session | null>(null);
   const [userAuth, setUserAuth] = useState<User | null>(null);
   const [user, setUser] = useState<UsersRow | null>(null);
+  const fetchUser = async () => {
+    if (userAuth) {
+      const { data, error } = await supabase
+        .from("Users")
+        .select("*")
+        .eq("id", userAuth.id)
+        .single();
+
+      if (!error) {
+        setUser(data);
+        return false;
+      }
+      return true;
+    }
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      if (userAuth) {
-        const { data, error } = await supabase
-          .from("Users")
-          .select("*")
-          .eq("id", userAuth.id)
-          .single();
-
-        if (!error) {
-          setUser(data);
-          return false;
-        }
-        return true;
-      }
-    };
     const createUser = async () => {
       const shouldCreate = await fetchUser();
       if (userAuth && shouldCreate) {
@@ -92,6 +94,10 @@ export const UserContextProvider = (props: any) => {
     session,
     userAuth,
     user,
+    refetchUser: async () => {
+      await fetchUser();
+      return user;
+    },
     updateUser: (user: UsersRow) => {
       setUser(user);
       return user;

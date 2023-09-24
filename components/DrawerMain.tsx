@@ -41,15 +41,16 @@ const DrawerMain = ({ HomeScreen, setIndex }: Props) => {
     },
   };
   const Drawer = createDrawerNavigator();
-  const { userAuth: user } = useUser();
+  const { userAuth, user } = useUser();
   const [noGroupsYet, setNoGroupsYet] = useState(true);
   const [groups, setGroups] = useState<GroupsRow[] | null>(null);
   const retrieveGroups = async () => {
+    console.log(user?.groups);
     if (user?.id) {
       const { data, error } = await supabase
         .from("Groups")
         .select("*")
-        .contains("members", [user.id]);
+        .in("id", user.groups);
       if (error) {
         setNoGroupsYet(true);
       } else {
@@ -61,7 +62,7 @@ const DrawerMain = ({ HomeScreen, setIndex }: Props) => {
 
   useEffect(() => {
     retrieveGroups();
-  }, []);
+  }, [user?.groups]);
   const GroupFeedItem = (groupId: number, navigation: any) => {
     navigation.addListener("focus", () => {
       setIndex(0);
