@@ -34,7 +34,7 @@ const FeedList = ({
       onEndReached={() => {
         if (!isRefreshing) {
           fetchPosts(false, page);
-        }
+        } // LOAD MORE DATA
       }}
       ListFooterComponent={
         <ActivityIndicator
@@ -43,7 +43,7 @@ const FeedList = ({
           color={MD2Colors.purple100}
         />
       }
-      onEndReachedThreshold={0.5}
+      onEndReachedThreshold={1}
       renderItem={({ item }) => <FeedItem item={item} />}
       keyExtractor={(post) => post.id}
     />

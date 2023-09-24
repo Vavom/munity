@@ -296,6 +296,28 @@ export default function Auth() {
               </View>
             )}
             {/* </View> */}
+            {/* <Button
+              compact={true}
+              mode="contained-tonal"
+              disabled={!!loading.length}
+              loading={loading === "SIGNUP"}
+              onPress={async () =>
+                await handleLogin("LOGIN", "nshamash123@gmail.com", "123456")
+              }
+            >
+              Sign in nshamash123
+            </Button>
+            <Button
+              compact={true}
+              mode="contained-tonal"
+              disabled={!!loading.length}
+              loading={loading === "SIGNUP"}
+              onPress={async () =>
+                await handleLogin("LOGIN", "mshamash@hotmail.com", "123456")
+              }
+            >
+              Sign in mshamash
+            </Button> */}
           </View>
         </View>
       </ImageBackground>
@@ -391,26 +413,3 @@ const styles = StyleSheet.create({
     marginBottom: 60,
   },
 });
-
-/* <Button
-              compact={true}
-              mode="contained-tonal"
-              disabled={!!loading.length}
-              loading={loading === "SIGNUP"}
-              onPress={async () =>
-                await handleLogin("LOGIN", "nshamash123@gmail.com", "123456")
-              }
-            >
-              Sign in nshamash123
-            </Button>
-            <Button
-              compact={true}
-              mode="contained-tonal"
-              disabled={!!loading.length}
-              loading={loading === "SIGNUP"}
-              onPress={async () =>
-                await handleLogin("LOGIN", "mshamash@hotmail.com", "123456")
-              }
-            >
-              Sign in mshamash
-            </Button> */

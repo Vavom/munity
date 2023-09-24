@@ -3,6 +3,7 @@ import { Alert, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Account = () => {
   const { userAuth: user } = useUser();
@@ -14,7 +15,10 @@ const Account = () => {
       <Button
         icon="camera"
         mode="contained"
-        onPress={() => supabase.auth.signOut()}
+        onPress={() => {
+          AsyncStorage.clear();
+          supabase.auth.signOut();
+        }}
       >
         Sign Out
       </Button>
