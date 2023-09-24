@@ -17,7 +17,7 @@ import Feed from "./Feed";
 import CreateGroup from "./CreateGroup";
 
 const Home = () => {
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   return (
     <View style={{ height: "100%" }}>
       <Feed />

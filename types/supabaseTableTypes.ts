@@ -2,6 +2,7 @@ import { Database } from "./supabase";
 
 export type GroupsRow = Database["public"]["Tables"]["Groups"]["Row"];
 export type PostsRow = Database["public"]["Tables"]["Posts"]["Row"];
+export type UsersRow = Database["public"]["Tables"]["Users"]["Row"];
 
 export type GroupsInsert = Database["public"]["Tables"]["Groups"]["Insert"];
 export type PostsInsert = Database["public"]["Tables"]["Posts"]["Insert"];

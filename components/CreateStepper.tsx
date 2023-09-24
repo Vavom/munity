@@ -21,8 +21,10 @@ type Props = {
   selectedGroup: null | number;
   setContent: React.Dispatch<React.SetStateAction<string>>;
   content: string;
-  setImage: React.Dispatch<React.SetStateAction<ImagePickerAsset | null | undefined>>;
-  image: ImagePickerAsset | null | undefined
+  setImage: React.Dispatch<
+    React.SetStateAction<ImagePickerAsset | null | undefined>
+  >;
+  image: ImagePickerAsset | null | undefined;
 };
 const CreateStepper = ({
   step,
@@ -33,10 +35,10 @@ const CreateStepper = ({
   setContent,
   setSelectedGroup,
   setImage,
-  image
+  image,
 }: Props) => {
   const [expanded, setExpanded] = useState(false);
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const [noGroupsYet, setNoGroupsYet] = useState(true);
   const [groups, setGroups] = useState<GroupsRow[] | null>(null);
 
@@ -78,7 +80,7 @@ const CreateStepper = ({
         </>
       );
     case 1:
-      return <ImageUpload setImage={setImage} image={image} />
+      return <ImageUpload setImage={setImage} image={image} />;
     case 2:
       return (
         <>
@@ -108,7 +110,7 @@ const CreateStepper = ({
         </>
       );
     default:
-      return <></>
+      return <></>;
       break;
   }
 };

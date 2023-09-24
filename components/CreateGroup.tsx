@@ -16,7 +16,7 @@ import { useUser } from "./UserContext";
 import Feed from "./Feed";
 
 const CreateGroup = () => {
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const [visible, setVisible] = React.useState(false);
   const [name, setName] = React.useState("");
   const createGroup = async () => {

@@ -1,26 +1,17 @@
 import { useEffect, useState } from "react";
 import { Alert, View } from "react-native";
-import {
-  ActivityIndicator,
-  Avatar,
-  List,
-  MD2Colors,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import { ActivityIndicator, MD2Colors, TextInput } from "react-native-paper";
 import { supabase } from "../supabase/supabaseClient";
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { useUser } from "./UserContext";
-import GradientButton from "./GradientButton";
-import PostHeaderInfo from "./PostHeaderInfo";
-import stringToColor from "./utils/colourUtils";
+import SearchItem from "./SearchItem";
 
 const Search = () => {
   const [title, setTitle] = useState("");
   const [groups, setGroups] = useState<any>();
-  const { user } = useUser();
+  const { user, updateUser } = useUser();
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [groupIds, setGroupIds] = useState<any>([]);
+  const [groupIds, setGroupIds] = useState<number[]>(user?.groups ?? []);
 
   const searchGroup = async () => {
     if (title.length === 0) {
@@ -38,34 +29,27 @@ const Search = () => {
     setIsRefreshing(false);
   };
 
-  const fetchGroupIds = async () => {
-    const { data, error } = await supabase
-      .from("Groups")
-      .select("id")
-      .contains("members", [user?.id]);
-    if (error) {
-      Alert.alert(JSON.stringify(error.message));
-    } else {
-      setGroupIds(data);
-    }
-  };
-
-  const joinGroup = async (id: number, members: any) => {
-    console.log(members);
-    if (user?.id == null) {
+  const joinGroup = async (id: number) => {
+    console.log(user);
+    if (user === null) {
       console.log("here");
       return;
     }
 
     const { data, error } = await supabase
-      .from("Groups")
-      .update({ members: [...members, user?.id] })
-      .eq("id", id)
-      .select("*");
+      .from("Users")
+      .update({ groups: [...user.groups, id] })
+      .eq("id", user.id)
+      .select("*")
+      .single();
+
+    //Update group IDs
 
     if (error) {
       Alert.alert(JSON.stringify(error.message));
     } else {
+      console.log(data);
+      updateUser(data);
       setGroupIds([...groupIds, id]);
     }
     console.log(data);
@@ -75,10 +59,6 @@ const Search = () => {
     searchGroup();
   }, [title]);
 
-  useEffect(() => {
-    fetchGroupIds();
-  }, []);
-
   return (
     <View>
       <TextInput
@@ -87,52 +67,12 @@ const Search = () => {
         onChangeText={(title) => setTitle(title)}
       />
       {groups?.map((group: GroupsRow) => (
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
+        <SearchItem
+          group={group}
+          groupIds={groupIds}
+          joinGroup={joinGroup}
           key={group.id}
-        >
-          <View
-            style={{
-              flexGrow: 1,
-              flexDirection: "row",
-              alignContent: "center",
-            }}
-          >
-            <Avatar.Icon
-              style={{
-                backgroundColor: stringToColor(group.name),
-                marginEnd: 5,
-              }}
-              size={20}
-              icon="account-group"
-            />
-            <Text style={{ alignSelf: "center" }} variant="bodySmall">
-              {group.name.slice(0, 35)}
-              {group.name.length > 35 ? "..." : null}
-            </Text>
-          </View>
-          <View>
-            <GradientButton
-              buttonColor="transparent"
-              disabled={groupIds.some(
-                (item: { id: any }) => item.id === group.id
-              )}
-              contentStyle={{ width: "auto" }}
-              mode="contained"
-              onPress={(e) => {
-                joinGroup(group.id, group.members);
-              }}
-            >
-              {groupIds.some((item: { id: any }) => item.id === group.id)
-                ? "Joined"
-                : "Join"}
-            </GradientButton>
-          </View>
-        </View>
+        />
       ))}
       {isRefreshing ? (
         <ActivityIndicator

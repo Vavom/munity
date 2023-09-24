@@ -33,7 +33,7 @@ type Props = {
 };
 
 const SingleCommentView = ({ visible, setVisible, commentItem }: Props) => {
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const containerStyle = { backgroundColor: "white", padding: 10 };
   const [comment, setComment] = useState<string>("");
 

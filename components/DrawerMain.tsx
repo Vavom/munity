@@ -41,7 +41,7 @@ const DrawerMain = ({ HomeScreen, setIndex }: Props) => {
     },
   };
   const Drawer = createDrawerNavigator();
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const [noGroupsYet, setNoGroupsYet] = useState(true);
   const [groups, setGroups] = useState<GroupsRow[] | null>(null);
   const retrieveGroups = async () => {

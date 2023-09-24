@@ -61,8 +61,8 @@ export default function Auth() {
     const { user } = signUp.data;
     if (user) {
       const { error } = await supabase
-        .from("profiles")
-        .insert([{ id: user.id, username, email }]);
+        .from("Users")
+        .insert([{ id: user.id, username, groups: [], posts: [] }]);
       if (error) Alert.alert(JSON.stringify(error));
     }
     return signUp;

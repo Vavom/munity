@@ -39,7 +39,7 @@ type Props = {
 
 const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const paperTheme = useAppTheme();
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const containerStyle = { padding: 10 };
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<any>([]);

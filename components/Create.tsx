@@ -22,7 +22,7 @@ const Create = () => {
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState<ImagePickerAsset | null | undefined>(null);
   const [selectedGroup, setSelectedGroup] = useState<null | number>(null);
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
 
   const uploadImage = async () => {
     // Implement your image upload logic here, e.g., send it to a server

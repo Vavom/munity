@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import {
+  Alert,
   AppRegistry,
   Dimensions,
   SafeAreaView,
@@ -12,21 +13,36 @@ import "react-native-url-polyfill/auto";
 import { Styles } from "./constants";
 import Login from "./components/Login";
 import { UserContextProvider, useUser } from "./components/UserContext";
-import { ActivityIndicator, MD2Colors, PaperProvider } from "react-native-paper";
+import {
+  ActivityIndicator,
+  MD2Colors,
+  PaperProvider,
+} from "react-native-paper";
 import Main from "./components/Main";
 import React, { useEffect, useState } from "react";
 import { darkTheme } from "./themes";
 import { supabase } from "./supabase/supabaseClient";
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Container = () => {
-  const { user } = useUser();
+  const { userAuth, user } = useUser();
 
   return (
     <PaperProvider theme={darkTheme}>
-      {user ? (
-        <Main />
+      {userAuth ? (
+        user ? (
+          <Main />
+        ) : (
+          <View
+            style={{ ...baseStylesForApp.container, justifyContent: "center" }}
+          >
+            <ActivityIndicator
+              size={"large"}
+              animating={true}
+              color={MD2Colors.purple100}
+            />
+          </View>
+        )
       ) : (
         <View style={baseStylesForApp.container}>
           <Login />

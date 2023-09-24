@@ -10,7 +10,7 @@ import { GroupsRow } from "../types/supabaseTableTypes";
 import CreateGroup from "./CreateGroup";
 
 const Groups = () => {
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const [noGroupsYet, setNoGroupsYet] = useState(true);
   const [groups, setGroups] = useState<GroupsRow[] | null>(null);
   const getGroupMemberInfo = async (memberIDs: string[]) => {

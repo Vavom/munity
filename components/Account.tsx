@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {Alert, View} from 'react-native';
-import {Button, Text, TextInput} from 'react-native-paper';
-import {supabase} from '../supabase/supabaseClient';
-import {useUser} from './UserContext';
+import React, { useState, useEffect } from "react";
+import { Alert, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
+import { supabase } from "../supabase/supabaseClient";
+import { useUser } from "./UserContext";
 
 const Account = () => {
-  const {user} = useUser();
+  const { userAuth: user } = useUser();
 
   return (
     <View>
@@ -14,7 +14,8 @@ const Account = () => {
       <Button
         icon="camera"
         mode="contained"
-        onPress={() => supabase.auth.signOut()}>
+        onPress={() => supabase.auth.signOut()}
+      >
         Sign Out
       </Button>
     </View>

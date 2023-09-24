@@ -29,9 +29,10 @@ import FeedItem from "./FeedItem";
 import { useUser } from "./UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeedList from "./FeedList";
+import { PostsRow } from "../types/supabaseTableTypes";
 
 const Feed = () => {
-  const [posts, setPosts] = React.useState<any>([]);
+  const [posts, setPosts] = React.useState<PostsRow[]>([]);
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
@@ -39,21 +40,11 @@ const Feed = () => {
   const { user } = useUser();
   const PAGE_LENGTH = 6;
 
-  const fetchGroupIds = async () => {
-    console.log("groupfetch");
-    const { data, error } = await supabase
-      .from("Groups")
-      .select("id")
-      .contains("members", [user?.id]);
-    if (error) {
-      Alert.alert(JSON.stringify(error.message));
-    } else {
-      setGroupIds(data);
-      return data;
-    }
-  };
-
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
+    if (!user) {
+      Alert.alert("User does not exist");
+      return;
+    }
     setIsRefreshing(true);
     const storedPosts = await AsyncStorage.getItem("feed-posts");
     const pageStored = JSON.parse(
@@ -65,20 +56,11 @@ const Feed = () => {
     } else {
       await AsyncStorage.removeItem("feed-posts");
       await AsyncStorage.removeItem("feed-posts-page");
-      let ids;
-      if (groupIds.length < 1) {
-        ids = await fetchGroupIds();
-      } else {
-        ids = groupIds;
-      }
 
       const { data, error } = await supabase
         .from("Posts")
         .select("*, Groups(id, name)")
-        .in(
-          "group",
-          ids.map((object: { id: any }) => object.id)
-        )
+        .in("group", user.groups)
         .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
         .order("created_at", { ascending: false })
         .limit(PAGE_LENGTH);

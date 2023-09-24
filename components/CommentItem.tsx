@@ -23,7 +23,7 @@ const CommentItem = ({ commentItem }: Props) => {
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<any>([]);
   const [clickedComment, setclickedComment] = useState<any>(null);
-  const { user } = useUser();
+  const { userAuth: user } = useUser();
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
   const PAGE_LENGTH = 6;
   const [isRefreshing, setIsRefreshing] = useState(false);
