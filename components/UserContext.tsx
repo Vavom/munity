@@ -30,9 +30,7 @@ export const UserContextProvider = (props: any) => {
           .eq("id", userAuth.id)
           .single();
 
-        if (error) {
-          Alert.alert(JSON.stringify(error));
-        } else {
+        if (!error) {
           setUser(data);
           return false;
         }
