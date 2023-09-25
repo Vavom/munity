@@ -73,44 +73,38 @@ const Main = () => {
     },
   ]);
 
-  const HomeScreen = (HomeRoute: () => React.JSX.Element, navigation: any) => {
-    const renderScene = BottomNavigation.SceneMap({
-      home: () => (
-        <View style={baseStylesForApp.container}>
-          <HomeRoute />
+  const renderScene = BottomNavigation.SceneMap({
+    home: () => (
+      <View style={baseStylesForApp.container}>
+        <View style={{ height: "100%" }}>
+          <Home />
         </View>
-      ),
-      search: () => <SearchRoute />,
-      create: () => <CreateRoute />,
-      groups: () => <GroupsRoute />,
-      account: () => <AccountRoute />,
-    });
+      </View>
+    ),
+    search: () => <SearchRoute />,
+    create: () => <CreateRoute />,
+    groups: () => <GroupsRoute />,
+    account: () => <AccountRoute />,
+  });
 
-    return (
-      <>
-        <BottomNavigation
-          shifting={false}
-          barStyle={{
-            backgroundColor: darkTheme.colors.background,
-            height: 60,
-            justifyContent: "center",
-            // paddingVertical: 10,
-          }}
-          navigationState={{ index, routes }}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-          onTabPress={() => {
-            if (index === 0) {
-              navigation.navigate("Home");
-            }
-          }}
-        />
-      </>
-    );
-  };
   return (
     <>
-      <DrawerMain HomeScreen={HomeScreen} setIndex={setIndex} />
+      <Appbar.Header style={{ height: 30 }} mode="small">
+        <Appbar.Content title="Home" />
+      </Appbar.Header>
+
+      <BottomNavigation
+        shifting={false}
+        barStyle={{
+          backgroundColor: darkTheme.colors.background,
+          height: 60,
+          justifyContent: "center",
+          // paddingVertical: 10,
+        }}
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+      />
     </>
   );
 };

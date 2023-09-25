@@ -18,7 +18,6 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
-  SafeAreaView,
 } from "react-native";
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { getTimeAgo } from "./utils/dateUtils";

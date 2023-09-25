@@ -3,7 +3,6 @@ import {
   Alert,
   FlatList,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -96,15 +95,13 @@ const Feed = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView>
-        <FeedList
-          isPullDownRefreshing={isPullDownRefreshing}
-          fetchPosts={fetchPosts}
-          posts={posts}
-          page={page}
-          isRefreshing={isRefreshing}
-        />
-      </SafeAreaView>
+      <FeedList
+        isPullDownRefreshing={isPullDownRefreshing}
+        fetchPosts={fetchPosts}
+        posts={posts}
+        page={page}
+        isRefreshing={isRefreshing}
+      />
     </View>
   );
 };

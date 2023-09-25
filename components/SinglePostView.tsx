@@ -18,7 +18,6 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
-  SafeAreaView,
 } from "react-native";
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { getTimeAgo } from "./utils/dateUtils";
@@ -120,39 +119,37 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
                   Submit
                 </Button>
               </View>
-              <SafeAreaView>
-                <FlatList
-                  style={{ height: "75%" }}
-                  showsVerticalScrollIndicator={false}
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={isPullDownRefreshing}
-                      onRefresh={() => {
-                        fetchComments(true, 0);
-                      }}
-                      colors={["#3498db"]} // Customize the loading indicator color
-                    />
+              <FlatList
+                style={{ height: "75%" }}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isPullDownRefreshing}
+                    onRefresh={() => {
+                      fetchComments(true, 0);
+                    }}
+                    colors={["#3498db"]} // Customize the loading indicator color
+                  />
+                }
+                data={comments}
+                onEndReached={() => {
+                  if (!isRefreshing) {
+                    fetchComments(false, page);
                   }
-                  data={comments}
-                  onEndReached={() => {
-                    if (!isRefreshing) {
-                      fetchComments(false, page);
-                    }
-                  }}
-                  ListFooterComponent={
-                    <ActivityIndicator
-                      style={{ margin: 20 }}
-                      animating={isRefreshing}
-                      color={MD2Colors.purple100}
-                    />
-                  }
-                  onEndReachedThreshold={1}
-                  renderItem={({ item }) => {
-                    return <CommentItem commentItem={item} />;
-                  }}
-                  keyExtractor={(item) => item.id}
-                />
-              </SafeAreaView>
+                }}
+                ListFooterComponent={
+                  <ActivityIndicator
+                    style={{ margin: 20 }}
+                    animating={isRefreshing}
+                    color={MD2Colors.purple100}
+                  />
+                }
+                onEndReachedThreshold={1}
+                renderItem={({ item }) => {
+                  return <CommentItem commentItem={item} />;
+                }}
+                keyExtractor={(item) => item.id}
+              />
             </View>
           </View>
         </Modal>

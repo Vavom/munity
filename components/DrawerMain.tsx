@@ -10,12 +10,13 @@ import { supabase } from "../supabase/supabaseClient";
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { useUser } from "./UserContext";
 import { View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Card, List, Text, useTheme } from "react-native-paper";
 import GroupFeed from "./GroupFeed";
 import { Database } from "../types/supabase";
 import Home from "./Home";
 import React from "react";
 import { useAppTheme } from "../themes";
+import ListItem from "react-native-paper/lib/typescript/components/List/ListItem";
 
 type Props = {
   HomeScreen: (
@@ -85,36 +86,22 @@ const DrawerMain = ({ HomeScreen, setIndex }: Props) => {
   };
 
   return (
-    <>
-      <NavigationContainer theme={NavigatorTheme}>
-        <Drawer.Navigator
-          screenOptions={{ headerTintColor: paperTheme.colors.onSurface }}
-          initialRouteName="Home"
-        >
-          <Drawer.Screen
-            name="Home"
+    <View style={{ flex: 1 }}>
+      {/* {groups?.map((group: GroupsRow) => {
+        const card = (
+          <ListItem
             options={{
-              drawerItemStyle: { display: "none" },
+              drawerLabelStyle: { color: paperTheme.colors.onSurface },
             }}
-            component={OriginalHome}
-          />
-          {groups?.map((group: GroupsRow) => {
-            const card = (
-              <Drawer.Screen
-                options={{
-                  drawerLabelStyle: { color: paperTheme.colors.onSurface },
-                }}
-                key={group.id}
-                name={group.name}
-              >
-                {({ navigation }) => GroupFeedItem(group.id, navigation)}
-              </Drawer.Screen>
-            );
-            return card;
-          })}
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </>
+            key={group.id}
+            name={group.name}
+          >
+            {({ navigation }) => GroupFeedItem(group.id, navigation)}
+          </Drawer.Screen>
+        );
+        return card;
+      })} */}
+    </View>
   );
 };
 

@@ -4,13 +4,13 @@
     "slug": "4rums",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./images/munityWhiteIcon.png",
+    "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./images/corners.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+      "backgroundColor": "#000000"
+    },  
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -19,12 +19,24 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./images/munityWhiteIcon.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.munity.tiger"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3fda8161-5ed5-46fc-866f-8d30f03fcc50"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/3fda8161-5ed5-46fc-866f-8d30f03fcc50"
     }
   }
 }

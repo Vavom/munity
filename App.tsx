@@ -4,7 +4,6 @@ import {
   Alert,
   AppRegistry,
   Dimensions,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -31,7 +30,9 @@ const Container = () => {
     <PaperProvider theme={darkTheme}>
       {userAuth ? (
         user ? (
-          <Main />
+          <View style={{ flex: 1 }}>
+            <Main />
+          </View>
         ) : (
           <View
             style={{ ...baseStylesForApp.container, justifyContent: "center" }}

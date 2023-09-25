@@ -413,3 +413,4 @@ const styles = StyleSheet.create({
     marginBottom: 60,
   },
 });
+// C:\Users\noahs\Desktop\bundletool-all-1.15.4.jar build-apks --bundle=application-c0eb2fed-16c2-44e0-9d89-78da5abd4e22.aab --output=app-release.aab.apks --mode=universal

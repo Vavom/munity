@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl } from "react-native-gesture-handler";
+import { FlatList, RefreshControl } from "react-native";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
 import FeedItem from "./FeedItem";
 
