@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Card,
   MD2Colors,
@@ -21,6 +22,7 @@ import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
 import SingleCommentView from "./SingleCommentView";
 import { useAppTheme } from "../themes";
+import stringToColor from "./utils/colourUtils";
 
 type Props = {
   commentItem: any;
@@ -76,7 +78,6 @@ const CommentItem = ({ commentItem }: Props) => {
       }}
       key={commentItem.id}
       style={{
-        marginBottom: 4,
         marginVertical: 4,
       }}
     >
@@ -88,9 +89,24 @@ const CommentItem = ({ commentItem }: Props) => {
             visible={visible}
           />
         ) : null}
-        <Text style={{ marginBottom: 10 }} variant="bodySmall">
-          {commentItem.name + " • " + getTimeAgo(commentItem.created_at)}
-        </Text>
+        <View style={{ marginBottom: 4, flexDirection: "row" }}>
+          <Avatar.Icon
+            style={{
+              backgroundColor: stringToColor(commentItem.user),
+              marginEnd: 8,
+            }}
+            size={24}
+            icon="account-circle"
+          />
+          <View style={{ marginVertical: 4, flexDirection: "row" }}>
+            <Text style={{ color: "lightgrey" }} variant="bodySmall">
+              {commentItem.name + " • "}
+            </Text>
+            <Text style={{ color: "grey" }} variant="bodySmall">
+              {getTimeAgo(commentItem.created_at)}
+            </Text>
+          </View>
+        </View>
         <Text variant="bodyMedium">{commentItem.content}</Text>
         {comments.length > 0 ? (
           <FlatList

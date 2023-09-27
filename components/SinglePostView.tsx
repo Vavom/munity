@@ -138,11 +138,13 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
               }
             }}
             ListFooterComponent={
-              <ActivityIndicator
-                style={{ margin: 20 }}
-                animating={isRefreshing}
-                color={MD2Colors.purple100}
-              />
+              isRefreshing ? (
+                <ActivityIndicator
+                  style={{ margin: 20 }}
+                  animating={isRefreshing}
+                  color={MD2Colors.purple100}
+                />
+              ) : null
             }
             onEndReachedThreshold={1}
             renderItem={({ item }) => {
