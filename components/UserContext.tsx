@@ -1,4 +1,5 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
+import type { AuthChangeEvent } from "@supabase/supabase-js";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../supabase/supabaseClient";
 import { UsersRow } from "../types/supabaseTableTypes";
@@ -22,6 +23,7 @@ export const UserContextProvider = (props: any) => {
   const [session, setSession] = useState<Session | null>(null);
   const [userAuth, setUserAuth] = useState<User | null>(null);
   const [user, setUser] = useState<UsersRow | null>(null);
+
   const fetchUser = async () => {
     if (userAuth) {
       const { data, error } = await supabase
@@ -30,14 +32,14 @@ export const UserContextProvider = (props: any) => {
         .eq("id", userAuth.id)
         .single();
 
-      if (!error) {
+      if (!error && data) {
         setUser(data);
         return false;
       }
       return true;
     }
+    return false;
   };
-
   useEffect(() => {
     const createUser = async () => {
       const shouldCreate = await fetchUser();
@@ -57,13 +59,16 @@ export const UserContextProvider = (props: any) => {
         if (error?.code !== "23505" && error) {
           console.log(error);
           Alert.alert(JSON.stringify(error));
+          createUser();
+        } else if (error) {
+          Alert.alert(JSON.stringify(error));
+          createUser();
         } else {
           console.log({ setUser: data });
           setUser(data);
         }
       }
     };
-
     createUser();
   }, [userAuth?.id]);
 
@@ -78,10 +83,15 @@ export const UserContextProvider = (props: any) => {
     getAuthListener();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: AuthChangeEvent, session) => {
         console.log(`Supabase auth event: ${event}`);
+        if (event === "SIGNED_OUT") {
+          setUserAuth(null);
+          setUser(null);
+        } else if (event === "SIGNED_IN") {
+          setUserAuth(session?.user ?? null);
+        }
         setSession(session);
-        setUserAuth(session?.user ?? null);
       }
     );
     return () => {
