@@ -1,4 +1,11 @@
-import { Button, Card, MD2Colors, Text, TextInput } from "react-native-paper";
+import {
+  Button,
+  Card,
+  MD2Colors,
+  Text,
+  TextInput,
+  TouchableRipple,
+} from "react-native-paper";
 import { getTimeAgo } from "./utils/dateUtils";
 import { useEffect, useState } from "react";
 import SinglePostView from "./SinglePostView";
@@ -13,6 +20,7 @@ import {
 import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
 import SingleCommentView from "./SingleCommentView";
+import { useAppTheme } from "../themes";
 
 type Props = {
   commentItem: any;
@@ -68,39 +76,48 @@ const CommentItem = ({ commentItem }: Props) => {
     fetchComments(false, 0);
   }, []);
 
+  const theme = useAppTheme();
+
   return (
-    <>
-      {clickedComment !== null ? (
-        <SingleCommentView
-          setVisible={setVisible}
-          commentItem={clickedComment}
-          visible={visible}
-        />
-      ) : null}
-      <Card
-        onPress={() => {
-          setVisible(true);
-          setclickedComment(commentItem);
-        }}
-        style={{ marginVertical: 5 }}
-        key={commentItem.id}
-      >
-        <Card.Content>
-          <Text style={{ marginBottom: 10 }} variant="bodySmall">
-            {commentItem.name + " • " + getTimeAgo(commentItem.created_at)}
-          </Text>
-          <Text variant="bodyMedium">{commentItem.content}</Text>
+    <TouchableRipple
+      rippleColor={theme.animationColors.rippleColor}
+      onPress={() => {
+        setVisible(true);
+        setclickedComment(commentItem);
+      }}
+      key={commentItem.id}
+      style={{
+        marginBottom: 4,
+        marginVertical: 4,
+      }}
+    >
+      <View style={{ margin: 8 }}>
+        {clickedComment !== null ? (
+          <SingleCommentView
+            setVisible={setVisible}
+            commentItem={clickedComment}
+            visible={visible}
+          />
+        ) : null}
+        <Text style={{ marginBottom: 10 }} variant="bodySmall">
+          {commentItem.name + " • " + getTimeAgo(commentItem.created_at)}
+        </Text>
+        <Text variant="bodyMedium">{commentItem.content}</Text>
+        {comments.length > 0 ? (
           <FlatList
+            style={{ marginHorizontal: 8 }}
             showsVerticalScrollIndicator={false}
             data={comments}
             ListFooterComponent={
-              <ActivityIndicator
-                style={{ margin: 20 }}
-                animating={isRefreshing}
-                color={MD2Colors.purple100}
-              />
+              isRefreshing ? (
+                <ActivityIndicator
+                  style={{ margin: 20 }}
+                  animating={isRefreshing}
+                  color={MD2Colors.purple100}
+                />
+              ) : null
             }
-            onEndReachedThreshold={1}
+            scrollEnabled={false}
             renderItem={({ item }) => {
               if (item.parent_comment === commentItem.id) {
                 return <CommentItem commentItem={item} />;
@@ -109,25 +126,9 @@ const CommentItem = ({ commentItem }: Props) => {
             }}
             keyExtractor={(item) => item.id}
           />
-        </Card.Content>
-      </Card>
-    </>
+        ) : null}
+      </View>
+    </TouchableRipple>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-  },
-  textInput: {
-    flex: 1, // Take up the available space
-    marginRight: 16, // Add some margin between TextInput and Button
-  },
-  button: {
-    width: 100, // Set a fixed width for the button
-  },
-});
 export default CommentItem;

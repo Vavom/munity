@@ -89,7 +89,7 @@ const Main = () => {
 
   return (
     <>
-      <Appbar.Header style={{ height: 30 }} mode="small">
+      <Appbar.Header style={{ height: 50 }} mode="small">
         <Appbar.Content title="Home" />
       </Appbar.Header>
 

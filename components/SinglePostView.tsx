@@ -39,7 +39,6 @@ type Props = {
 const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const paperTheme = useAppTheme();
   const { userAuth: user } = useUser();
-  const containerStyle = { padding: 10 };
   const [comment, setComment] = useState<string>("");
   const [comments, setComments] = useState<any>([]);
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
@@ -84,77 +83,76 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
   };
 
   return (
-    <>
-      <Portal theme={paperTheme}>
-        <Modal
-          style={{ height: "100%" }}
-          visible={visible}
-          onDismiss={() => setVisible(false)}
-          contentContainerStyle={containerStyle}
-          theme={paperTheme}
-        >
-          <View style={{ height: "100%" }}>
-            <Appbar.BackAction onPress={() => setVisible(false)} />
-            <View style={{ marginHorizontal: 20 }}>
-              <PostHeaderInfo item={post} />
-              <Text style={{ marginBottom: 5 }} variant="titleLarge">
-                {post.title}
-              </Text>
-              {post.media != null ? <BucketImage path={post.media} /> : null}
-              <Text variant="bodyMedium">{post.content}</Text>
-              <Divider style={{ marginVertical: 20 }} />
-              <View style={styles.container}>
-                <TextInput
-                  label="Comment"
-                  value={comment}
-                  onChangeText={(comment) => setComment(comment)}
-                  style={styles.textInput}
-                />
-                <Button
-                  mode="contained"
-                  disabled={comment.length === 0}
-                  onPress={commentSubmit}
-                  style={styles.button}
-                >
-                  Submit
-                </Button>
-              </View>
-              <FlatList
-                style={{ height: "75%" }}
-                showsVerticalScrollIndicator={false}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={isPullDownRefreshing}
-                    onRefresh={() => {
-                      fetchComments(true, 0);
-                    }}
-                    colors={["#3498db"]} // Customize the loading indicator color
-                  />
-                }
-                data={comments}
-                onEndReached={() => {
-                  if (!isRefreshing) {
-                    fetchComments(false, page);
-                  }
-                }}
-                ListFooterComponent={
-                  <ActivityIndicator
-                    style={{ margin: 20 }}
-                    animating={isRefreshing}
-                    color={MD2Colors.purple100}
-                  />
-                }
-                onEndReachedThreshold={1}
-                renderItem={({ item }) => {
-                  return <CommentItem commentItem={item} />;
-                }}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
+    <Portal theme={paperTheme}>
+      <Modal
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        theme={paperTheme}
+        style={{ marginTop: 50 }}
+      >
+        <Appbar.Header style={{ marginVertical: 12 }} mode="small">
+          <Appbar.BackAction onPress={() => setVisible(false)} />
+        </Appbar.Header>
+        <View style={{ marginHorizontal: 18, height: "100%" }}>
+          <PostHeaderInfo item={post} />
+          <View style={{ marginBottom: 4 }}>
+            <Text variant="titleLarge">{post.title}</Text>
+            {post.media != null ? <BucketImage path={post.media} /> : null}
+            <Text variant="bodyMedium">{post.content}</Text>
+            <Divider style={{ marginVertical: 20 }} />
           </View>
-        </Modal>
-      </Portal>
-    </>
+          <View style={styles.container}>
+            <TextInput
+              label="Comment"
+              value={comment}
+              onChangeText={(comment) => setComment(comment)}
+              style={styles.textInput}
+            />
+            <Button
+              mode="contained"
+              disabled={comment.length === 0}
+              onPress={commentSubmit}
+              style={styles.button}
+            >
+              Submit
+            </Button>
+          </View>
+          <FlatList
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isPullDownRefreshing}
+                onRefresh={() => {
+                  fetchComments(true, 0);
+                }}
+                colors={["#3498db"]} // Customize the loading indicator color
+              />
+            }
+            data={comments}
+            onEndReached={() => {
+              if (!isRefreshing) {
+                fetchComments(false, page);
+              }
+            }}
+            ListFooterComponent={
+              <ActivityIndicator
+                style={{ margin: 20 }}
+                animating={isRefreshing}
+                color={MD2Colors.purple100}
+              />
+            }
+            onEndReachedThreshold={1}
+            renderItem={({ item }) => {
+              return <CommentItem commentItem={item} />;
+            }}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      </Modal>
+    </Portal>
   );
 };
 

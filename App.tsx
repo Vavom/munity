@@ -1,9 +1,9 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
 import {
   Alert,
   AppRegistry,
   Dimensions,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -20,22 +20,33 @@ import {
 import Main from "./components/Main";
 import React, { useEffect, useState } from "react";
 import { darkTheme } from "./themes";
+import { StatusBar } from "react-native";
 import { supabase } from "./supabase/supabaseClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 const Container = () => {
   const { userAuth, user } = useUser();
+  const insets = useSafeAreaInsets();
 
   return (
     <PaperProvider theme={darkTheme}>
+      <StatusBar />
       {userAuth ? (
         user ? (
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, paddingTop: insets.top }}>
             <Main />
           </View>
         ) : (
           <View
-            style={{ ...baseStylesForApp.container, justifyContent: "center" }}
+            style={{
+              ...baseStylesForApp.container,
+              justifyContent: "center",
+              paddingTop: insets.top,
+            }}
           >
             <ActivityIndicator
               size={"large"}
@@ -55,9 +66,11 @@ const Container = () => {
 
 export default function App() {
   return (
-    <UserContextProvider>
-      <Container />
-    </UserContextProvider>
+    <SafeAreaProvider>
+      <UserContextProvider>
+        <Container />
+      </UserContextProvider>
+    </SafeAreaProvider>
   );
 }
 
