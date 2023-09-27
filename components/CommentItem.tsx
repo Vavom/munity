@@ -55,21 +55,10 @@ const CommentItem = ({ commentItem }: Props) => {
         setPage(1);
       } else {
         setComments((prevData: any) => [...prevData, ...data]);
-        setPage(page + 1);
+        setPage((prev) => prev + 1);
       }
     }
     setIsRefreshing(false);
-  };
-
-  const commentSubmit = async () => {
-    const { error } = await supabase.from("Comments").insert({
-      post: commentItem.post,
-      user: user?.id,
-      parent_comment: commentItem.id,
-      content: comment,
-      name: user?.user_metadata.name,
-    });
-    if (error) Alert.alert(JSON.stringify(error.message));
   };
 
   useEffect(() => {

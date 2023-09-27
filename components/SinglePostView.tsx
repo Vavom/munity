@@ -44,7 +44,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
   const PAGE_LENGTH = 6;
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [page, setPage] = useState(0);
+  const [currentPage, setPage] = useState(0);
 
   const fetchComments = async (shouldClearData: boolean, page: number) => {
     setIsRefreshing(true);
@@ -65,7 +65,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
         setPage(1);
       } else {
         setComments((prevData: any) => [...prevData, ...data]);
-        setPage(page + 1);
+        setPage((prev) => prev + 1);
       }
     }
     setIsRefreshing(false);
@@ -134,7 +134,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
             data={comments}
             onEndReached={() => {
               if (!isRefreshing) {
-                fetchComments(false, page);
+                fetchComments(false, currentPage);
               }
             }}
             ListFooterComponent={
