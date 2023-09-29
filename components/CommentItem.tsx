@@ -57,7 +57,7 @@ const CommentItem = ({ commentItem }: Props) => {
         setPage(1);
       } else {
         setComments((prevData: any) => [...prevData, ...data]);
-        setPage((prev) => prev + 1);
+        setPage(page + 1);
       }
     }
     setIsRefreshing(false);
@@ -65,9 +65,13 @@ const CommentItem = ({ commentItem }: Props) => {
 
   useEffect(() => {
     fetchComments(false, 0);
-  }, []);
+  }, [commentItem]);
 
   const theme = useAppTheme();
+
+  const VerticalLine = () => {
+    return <View style={styles.verticalLine} />;
+  };
 
   return (
     <TouchableRipple
@@ -81,59 +85,72 @@ const CommentItem = ({ commentItem }: Props) => {
         marginVertical: 4,
       }}
     >
-      <View style={{ margin: 8 }}>
-        {clickedComment !== null ? (
-          <SingleCommentView
-            setVisible={setVisible}
-            commentItem={clickedComment}
-            visible={visible}
-          />
-        ) : null}
-        <View style={{ marginBottom: 4, flexDirection: "row" }}>
-          <Avatar.Icon
-            style={{
-              backgroundColor: stringToColor(commentItem.user),
-              marginEnd: 8,
-            }}
-            size={24}
-            icon="account-circle"
-          />
-          <View style={{ marginVertical: 4, flexDirection: "row" }}>
-            <Text style={{ color: "lightgrey" }} variant="bodySmall">
-              {commentItem.name + " • "}
-            </Text>
-            <Text style={{ color: "grey" }} variant="bodySmall">
-              {getTimeAgo(commentItem.created_at)}
-            </Text>
+      <View style={{ flexDirection: "row" }}>
+        {commentItem.parent_comment ? <VerticalLine /> : null}
+        <View style={{ marginVertical: 12 }}>
+          {clickedComment !== null ? (
+            <SingleCommentView
+              setVisible={setVisible}
+              commentItem={clickedComment}
+              visible={visible}
+            />
+          ) : null}
+          <View style={{ flexDirection: "row" }}>
+            <Avatar.Icon
+              style={{
+                backgroundColor: stringToColor(commentItem.user),
+                marginEnd: 8,
+              }}
+              size={24}
+              icon="account-circle"
+            />
+            <View style={{ marginVertical: 4, flexDirection: "row" }}>
+              <Text style={{ color: "lightgrey" }} variant="bodySmall">
+                {commentItem.name + " • "}
+              </Text>
+              <Text style={{ color: "grey" }} variant="bodySmall">
+                {getTimeAgo(commentItem.created_at)}
+              </Text>
+            </View>
           </View>
-        </View>
-        <Text variant="bodyMedium">{commentItem.content}</Text>
-        {comments.length > 0 ? (
-          <FlatList
-            style={{ marginHorizontal: 8 }}
-            showsVerticalScrollIndicator={false}
-            data={comments}
-            ListFooterComponent={
-              isRefreshing ? (
-                <ActivityIndicator
-                  style={{ margin: 20 }}
-                  animating={isRefreshing}
-                  color={MD2Colors.purple100}
-                />
-              ) : null
-            }
-            scrollEnabled={false}
-            renderItem={({ item }) => {
-              if (item.parent_comment === commentItem.id) {
-                return <CommentItem commentItem={item} />;
+          <Text variant="bodyMedium">{commentItem.content}</Text>
+          {comments.length > 0 ? (
+            <FlatList
+              style={{ marginHorizontal: 8 }}
+              showsVerticalScrollIndicator={false}
+              data={comments}
+              ListFooterComponent={
+                isRefreshing ? (
+                  <ActivityIndicator
+                    style={{ margin: 20 }}
+                    animating={isRefreshing}
+                    color={MD2Colors.purple100}
+                  />
+                ) : null
               }
-              return null;
-            }}
-            keyExtractor={(item) => item.id}
-          />
-        ) : null}
+              scrollEnabled={false}
+              renderItem={({ item }) => {
+                if (item.parent_comment === commentItem.id) {
+                  return <CommentItem commentItem={item} />;
+                }
+                return null;
+              }}
+              keyExtractor={(item) => item.id}
+            />
+          ) : null}
+        </View>
       </View>
     </TouchableRipple>
   );
 };
+
 export default CommentItem;
+
+const styles = StyleSheet.create({
+  verticalLine: {
+    width: 1,
+    marginRight: 12, // Adjust the width of the line as needed
+    height: "100%", // Adjust the height of the line as needed
+    backgroundColor: "grey", // Change the color of the line as needed
+  },
+});

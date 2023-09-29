@@ -54,8 +54,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
       .is("parent_comment", null)
       .in("post", [post.id])
       .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
-      .order("created_at", { ascending: false })
-      .limit(PAGE_LENGTH);
+      .order("created_at", { ascending: false });
     if (error) {
       Alert.alert(JSON.stringify(error.message));
       console.log(error.message);
@@ -65,7 +64,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
         setPage(1);
       } else {
         setComments((prevData: any) => [...prevData, ...data]);
-        setPage((prev) => prev + 1);
+        setPage(page + 1);
       }
     }
     setIsRefreshing(false);
