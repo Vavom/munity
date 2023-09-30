@@ -11,21 +11,33 @@ type Props = {
 
 const BottomFeedBar = ({ item }: Props) => {
   const theme = useAppTheme();
-  const [likesCount, setLikesCount] = useState(0);
-  const addLikesCount = async () => {
-    const { data: likes, error } = await supabase
-      .from("posts")
-      .update({ likes: (supabase as any).raw("likes + 1") })
-      .match({ id: item.id });
+  const [likesCount, setLikesCount] = useState(item.likes);
+  const addLikesCount = async (x: number) => {
+    if (x < 0) {
+      setLikesCount(item.likes);
+    } else {
+      setLikesCount(item.likes + x);
+    }
+    const { data, error } = await supabase.rpc(
+      "increment_likes" as never,
+      {
+        x,
+        row_id: item.id,
+      } as any
+    );
   };
   return (
     <>
       <Button
-        icon="chevron-up-circle-outline"
-        mode="contained"
-        onPress={addLikesCount}
+        icon={
+          likesCount > item.likes ? "arrow-up-bold" : "arrow-up-bold-outline"
+        }
+        mode="text"
+        onPress={() =>
+          likesCount > item.likes ? addLikesCount(-1) : addLikesCount(1)
+        }
       >
-        {item.likes}
+        {likesCount}
       </Button>
     </>
   );
