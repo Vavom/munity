@@ -120,13 +120,11 @@ const CommentItem = ({ commentItem }: Props) => {
               showsVerticalScrollIndicator={false}
               data={comments}
               ListFooterComponent={
-                isRefreshing ? (
-                  <ActivityIndicator
-                    style={{ margin: 20 }}
-                    animating={isRefreshing}
-                    color={MD2Colors.purple100}
-                  />
-                ) : null
+                <ActivityIndicator
+                  style={{ margin: 20 }}
+                  animating={isRefreshing}
+                  color={MD2Colors.purple100}
+                />
               }
               scrollEnabled={false}
               renderItem={({ item }) => {

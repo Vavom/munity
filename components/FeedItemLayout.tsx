@@ -3,6 +3,7 @@ import { useAppTheme } from "../themes";
 import BucketImage from "./BucketImage";
 import PostHeaderInfo from "./PostHeaderInfo";
 import { Divider, Text } from "react-native-paper";
+import BottomFeedBar from "./BottomFeedBar";
 type Props = {
   item: any;
 };
@@ -26,6 +27,7 @@ const FeedItemLayout = ({ item }: Props) => {
             {item.content}
           </Text>
         )}
+        <BottomFeedBar item={item} />
       </View>
       <Divider style={{ opacity: 0.4 }} />
     </>
