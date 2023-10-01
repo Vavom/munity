@@ -4,12 +4,31 @@ import BucketImage from "./BucketImage";
 import PostHeaderInfo from "./PostHeaderInfo";
 import { Divider, Text } from "react-native-paper";
 import BottomFeedBar from "./BottomFeedBar";
+import { supabase } from "../supabase/supabaseClient";
+import { useEffect, useState } from "react";
 type Props = {
   item: any;
 };
 
 const FeedItemLayout = ({ item }: Props) => {
   const theme = useAppTheme();
+  const [numComments, setNumComments] = useState(0);
+
+  const fetchCommentsNumbers = async () => {
+    const { data, error } = await supabase
+      .from("Comments")
+      .select("id")
+      .eq("post", item.id);
+    if (error) {
+      console.log(error);
+    } else {
+      setNumComments(data.length);
+    }
+  };
+
+  useEffect(() => {
+    fetchCommentsNumbers();
+  }, []);
   return (
     <>
       <View style={{ marginHorizontal: 8, marginVertical: 12 }}>
@@ -27,7 +46,7 @@ const FeedItemLayout = ({ item }: Props) => {
             {item.content}
           </Text>
         )}
-        <BottomFeedBar item={item} />
+        <BottomFeedBar numComments={numComments} item={item} />
       </View>
       <Divider style={{ opacity: 0.4 }} />
     </>
