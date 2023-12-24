@@ -16,15 +16,11 @@ import FeedForGroup from "./feed/FeedForGroup";
 
 type Props = {
   item: any;
-  isForSingleGroup: boolean;
 };
 
-function PostHeaderInfo({ item, isForSingleGroup }: Props) {
+function PostHeaderInfo({ item }: Props) {
   const [visible, setVisible] = useState(false);
   const theme = useAppTheme();
-  if (isForSingleGroup) {
-    return null;
-  }
   return (
     <View
       style={{ marginBottom: 10, flexDirection: "row", alignContent: "center" }}

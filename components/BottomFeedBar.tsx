@@ -22,6 +22,7 @@ const BottomFeedBar = ({ item, numComments }: Props) => {
   const addLikesCount = async (x: number) => {
     //required to stop weird like behaviour
     await AsyncStorage.removeItem("feed-posts");
+
     setshouldShowInitiallyLiked(false);
     if (x < 0) {
       setLikesCount(likesCount - 1);
@@ -55,15 +56,12 @@ const BottomFeedBar = ({ item, numComments }: Props) => {
       style={{
         marginTop: 12,
         justifyContent: "space-between",
+        borderRadius: 10,
+        backgroundColor: theme.colors.surfaceVariant,
         flexDirection: "row",
       }}
     >
-      <Button
-        onPress={() => {}}
-        icon={"message-outline"}
-        mode="elevated"
-        textColor={"grey"}
-      >
+      <Button icon={"message-outline"} mode="text" textColor={"grey"}>
         {numComments}
       </Button>
       <Button
@@ -72,7 +70,7 @@ const BottomFeedBar = ({ item, numComments }: Props) => {
             ? "arrow-up-bold"
             : "arrow-up-bold-outline"
         }
-        mode="elevated"
+        mode="text"
         textColor={
           likesCount > item.likes || shouldShowInitiallyLiked ? "cyan" : "grey"
         }

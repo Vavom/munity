@@ -32,7 +32,7 @@ const FullScreenImage = ({ imageUrl, height }: Props) => {
           resizeMode="cover"
           source={{ uri: "data:image/jpeg;base64," + imageUrl }}
           style={{
-            borderRadius: 20,
+            borderRadius: 10,
             height: height,
             width: "100%",
             aspectRatio: 1,

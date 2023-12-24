@@ -3,6 +3,7 @@ import {
   Alert,
   AppRegistry,
   Dimensions,
+  LogBox,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -66,6 +67,7 @@ const Container = () => {
 };
 
 export default function App() {
+  LogBox.ignoreAllLogs();
   return (
     <SafeAreaProvider>
       <UserContextProvider>

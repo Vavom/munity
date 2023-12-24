@@ -99,11 +99,17 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
         <Appbar.Header style={{ marginVertical: 12 }} mode="small">
           <Appbar.BackAction onPress={() => setVisible(false)} />
         </Appbar.Header>
-        <View style={{ marginHorizontal: 18, height: "100%" }}>
+        <View
+          style={{
+            marginHorizontal: 18,
+            height: "100%",
+            marginBottom: 20,
+          }}
+        >
           <Animated.FlatList
             ListHeaderComponent={
               <>
-                <PostHeaderInfo isForSingleGroup={false} item={post} />
+                <PostHeaderInfo item={post} />
                 <View style={{ marginBottom: 4 }}>
                   <Text variant="titleLarge">{post.title}</Text>
                   {post.media != null ? (
@@ -111,22 +117,6 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
                   ) : null}
                   <Text variant="bodyMedium">{post.content}</Text>
                   <Divider style={{ marginVertical: 20 }} />
-                </View>
-                <View style={styles.container}>
-                  <TextInput
-                    label="Comment"
-                    value={comment}
-                    onChangeText={(comment) => setComment(comment)}
-                    style={styles.textInput}
-                  />
-                  <Button
-                    mode="contained"
-                    disabled={comment.length === 0}
-                    onPress={commentSubmit}
-                    style={styles.button}
-                  >
-                    Submit
-                  </Button>
                 </View>
               </>
             }
@@ -151,13 +141,16 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
               }
             }}
             ListFooterComponent={
-              isRefreshing ? (
-                <ActivityIndicator
-                  style={{ margin: 20 }}
-                  animating={isRefreshing}
-                  color={MD2Colors.purple100}
-                />
-              ) : null
+              <>
+                {isRefreshing ? (
+                  <ActivityIndicator
+                    style={{ margin: 20 }}
+                    animating={isRefreshing}
+                    color={MD2Colors.purple100}
+                  />
+                ) : null}
+                <View style={{ height: 100 }}></View>
+              </>
             }
             onEndReachedThreshold={0.1}
             renderItem={({ item }) => {
@@ -165,6 +158,25 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
             }}
             keyExtractor={(item) => item.id}
           />
+        </View>
+        <View
+          style={{
+            ...styles.container,
+            marginHorizontal: 18,
+            justifyContent: "flex-start",
+            borderRadius: 10,
+            backgroundColor: paperTheme.colors.surfaceVariant,
+            flexDirection: "row",
+            position: "absolute",
+            bottom: 30,
+            left: 0,
+            right: 0,
+            zIndex: 10,
+          }}
+        >
+          <Button icon={"message-outline"} mode="text" textColor={"grey"}>
+            Comment
+          </Button>
         </View>
       </Modal>
     </Portal>

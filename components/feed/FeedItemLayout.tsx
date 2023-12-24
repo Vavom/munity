@@ -33,8 +33,7 @@ const FeedItemLayout = ({ item, isForSingleGroup }: Props) => {
   return (
     <>
       <View style={{ marginHorizontal: 8, marginVertical: 12 }}>
-        <PostHeaderInfo isForSingleGroup={isForSingleGroup} item={item} />
-
+        {isForSingleGroup ? null : <PostHeaderInfo item={item} />}
         <Text style={{ marginBottom: 5 }} variant="titleLarge">
           {item.title}
         </Text>
