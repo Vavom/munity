@@ -9,7 +9,7 @@ import {
 } from "react-native-paper";
 import { getTimeAgo } from "./utils/dateUtils";
 import { useEffect, useState } from "react";
-import SinglePostView from "./SinglePostView";
+import SinglePostView from "./post/SinglePostView";
 import {
   View,
   StyleSheet,

@@ -13,8 +13,8 @@ import { Styles } from "../constants";
 import Account from "./Account";
 import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
-import Feed from "./Feed";
-import CreateGroup from "./CreateGroup";
+import Feed from "./feed/Feed";
+import CreateGroup from "./creation/CreateGroup";
 
 const Home = () => {
   const { userAuth: user } = useUser();

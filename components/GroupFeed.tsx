@@ -22,7 +22,7 @@ import { useState } from "react";
 import Groups from "./Groups";
 import { getTimeAgo } from "./utils/dateUtils";
 import { RouteProp, ParamListBase } from "@react-navigation/native";
-import FeedItem from "./FeedItem";
+import FeedItem from "./feed/FeedItem";
 
 type Props = {
   groupId: number;

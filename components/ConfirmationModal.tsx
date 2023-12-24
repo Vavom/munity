@@ -14,12 +14,14 @@ type Props = {
   isVisible: boolean;
   setVisible: (visible: boolean) => void;
   confirmationType: ConfirmationType;
+  action: any;
 };
 
 const ConfirmationModal = ({
   confirmationType,
   isVisible,
   setVisible,
+  action,
 }: Props) => {
   const theme = useAppTheme();
   const confirmEmailContent = (
@@ -27,7 +29,7 @@ const ConfirmationModal = ({
   );
 
   const confirmCreatedPostContent = (
-    <Text>Please confirm your email, check your email app.</Text>
+    <Text>Looks great! Tap "Post" to let everyone see your amazing post!.</Text>
   );
 
   const getModalContent = () => {
@@ -41,12 +43,12 @@ const ConfirmationModal = ({
     }
   };
 
-  const getModalAction = () => {
+  const getButtonText = () => {
     switch (confirmationType) {
       case ConfirmationType.CONFIRM_EMAIL:
-        return () => {};
+        return "Confirm";
       case ConfirmationType.POST_CREATION:
-        return () => {};
+        return "Post";
       default:
         throw new Error("It broke");
     }
@@ -89,9 +91,12 @@ const ConfirmationModal = ({
           buttonColor="transparent"
           contentStyle={{ width: "auto" }}
           mode="contained"
-          onPress={getModalAction}
+          onPress={() => {
+            setVisible(false);
+            action();
+          }}
         >
-          {"Confirm"}
+          {getButtonText()}
         </GradientButton>
       </Modal>
     </Portal>

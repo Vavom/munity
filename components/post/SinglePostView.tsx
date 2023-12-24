@@ -11,24 +11,26 @@ import {
   TextInput,
   Button,
 } from "react-native-paper";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
 import {
   Alert,
   View,
   StyleSheet,
   FlatList,
   RefreshControl,
+  Animated,
+  ScrollView,
 } from "react-native";
-import { GroupsRow } from "../types/supabaseTableTypes";
-import { getTimeAgo } from "./utils/dateUtils";
-import { useUser } from "./UserContext";
-import FeedItem from "./FeedItem";
-import CommentItem from "./CommentItem";
-import SingleCommentView from "./SingleCommentView";
+import { GroupsRow } from "../../types/supabaseTableTypes";
+import { getTimeAgo } from "../utils/dateUtils";
+import { useUser } from "../UserContext";
+import FeedItem from "../feed/FeedItem";
+import CommentItem from "../CommentItem";
+import SingleCommentView from "../SingleCommentView";
 import React from "react";
-import { useAppTheme } from "../themes";
-import PostHeaderInfo from "./PostHeaderInfo";
-import BucketImage from "./BucketImage";
+import { useAppTheme } from "../../themes";
+import PostHeaderInfo from "../PostHeaderInfo";
+import BucketImage from "../BucketImage";
 
 type Props = {
   visible: boolean;
@@ -45,8 +47,12 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const PAGE_LENGTH = 6;
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentPage, setPage] = useState(0);
+  const [stopRefreshing, setStopRefreshing] = useState(false);
 
   const fetchComments = async (shouldClearData: boolean, page: number) => {
+    if (stopRefreshing) {
+      return;
+    }
     setIsRefreshing(true);
     const { data, error } = await supabase
       .from("Comments")
@@ -63,6 +69,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
         setComments(data);
         setPage(1);
       } else {
+        setStopRefreshing(data.length < 1);
         setComments((prevData: any) => [...prevData, ...data]);
         setPage(page + 1);
       }
@@ -93,33 +100,40 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
           <Appbar.BackAction onPress={() => setVisible(false)} />
         </Appbar.Header>
         <View style={{ marginHorizontal: 18, height: "100%" }}>
-          <PostHeaderInfo item={post} />
-          <View style={{ marginBottom: 4 }}>
-            <Text variant="titleLarge">{post.title}</Text>
-            {post.media != null ? <BucketImage path={post.media} /> : null}
-            <Text variant="bodyMedium">{post.content}</Text>
-            <Divider style={{ marginVertical: 20 }} />
-          </View>
-          <View style={styles.container}>
-            <TextInput
-              label="Comment"
-              value={comment}
-              onChangeText={(comment) => setComment(comment)}
-              style={styles.textInput}
-            />
-            <Button
-              mode="contained"
-              disabled={comment.length === 0}
-              onPress={commentSubmit}
-              style={styles.button}
-            >
-              Submit
-            </Button>
-          </View>
-          <FlatList
+          <Animated.FlatList
+            ListHeaderComponent={
+              <>
+                <PostHeaderInfo isForSingleGroup={false} item={post} />
+                <View style={{ marginBottom: 4 }}>
+                  <Text variant="titleLarge">{post.title}</Text>
+                  {post.media != null ? (
+                    <BucketImage path={post.media} />
+                  ) : null}
+                  <Text variant="bodyMedium">{post.content}</Text>
+                  <Divider style={{ marginVertical: 20 }} />
+                </View>
+                <View style={styles.container}>
+                  <TextInput
+                    label="Comment"
+                    value={comment}
+                    onChangeText={(comment) => setComment(comment)}
+                    style={styles.textInput}
+                  />
+                  <Button
+                    mode="contained"
+                    disabled={comment.length === 0}
+                    onPress={commentSubmit}
+                    style={styles.button}
+                  >
+                    Submit
+                  </Button>
+                </View>
+              </>
+            }
             contentContainerStyle={{
               flexGrow: 1,
             }}
+            scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl
@@ -145,7 +159,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
                 />
               ) : null
             }
-            onEndReachedThreshold={1}
+            onEndReachedThreshold={0.1}
             renderItem={({ item }) => {
               return <CommentItem commentItem={item} />;
             }}

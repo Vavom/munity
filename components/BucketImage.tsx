@@ -6,9 +6,10 @@ import { ActivityIndicator, MD2Colors } from "react-native-paper";
 
 interface Props {
   path: string;
+  height?: any;
 }
 
-export default function BucketImage({ path }: Props) {
+export default function BucketImage({ path, height }: Props) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function BucketImage({ path }: Props) {
   }, [path]);
 
   return imageUrl ? (
-    <FullScreenImage imageUrl={imageUrl} />
+    <FullScreenImage height={height ?? "auto"} imageUrl={imageUrl} />
   ) : (
     <ActivityIndicator
       style={{ width: "100%", aspectRatio: 1 }}

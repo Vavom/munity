@@ -18,17 +18,17 @@ import {
   Portal,
   Text,
 } from "react-native-paper";
-import { Styles } from "../constants";
-import { supabase } from "../supabase/supabaseClient";
+import { Styles } from "../../constants";
+import { supabase } from "../../supabase/supabaseClient";
 import { useState } from "react";
-import Groups from "./Groups";
-import { getTimeAgo } from "./utils/dateUtils";
-import SinglePostView from "./SinglePostView";
+import Groups from "../Groups";
+import { getTimeAgo } from "../utils/dateUtils";
+import SinglePostView from "../post/SinglePostView";
 import FeedItem from "./FeedItem";
-import { useUser } from "./UserContext";
+import { useUser } from "../UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeedList from "./FeedList";
-import { PostsRow } from "../types/supabaseTableTypes";
+import { PostsRow } from "../../types/supabaseTableTypes";
 
 const Feed = () => {
   const [posts, setPosts] = React.useState<PostsRow[]>([]);
@@ -36,15 +36,17 @@ const Feed = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(0);
   const [groupIds, setGroupIds] = useState<any>([]);
-  const { user } = useUser();
+  const { user, refetchUser } = useUser();
   const PAGE_LENGTH = 6;
 
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
+    await AsyncStorage.removeItem("feed-posts");
     if (!user) {
       Alert.alert("User does not exist");
       return;
     }
     setIsRefreshing(true);
+
     const storedPosts = await AsyncStorage.getItem("feed-posts");
     const pageStored = JSON.parse(
       (await AsyncStorage.getItem("feed-posts-page")) ?? "0"
@@ -53,7 +55,6 @@ const Feed = () => {
       setPosts(JSON.parse(storedPosts));
       setPage(pageStored);
     } else {
-      await AsyncStorage.removeItem("feed-posts");
       await AsyncStorage.removeItem("feed-posts-page");
 
       const { data, error } = await supabase
@@ -69,7 +70,7 @@ const Feed = () => {
       } else {
         if (shouldClearData) {
           setPosts(() => {
-            AsyncStorage.setItem("feed-posts", JSON.stringify(data));
+            // AsyncStorage.setItem("feed-posts", JSON.stringify(data));
             return data;
           });
           setPage(1);
@@ -101,6 +102,7 @@ const Feed = () => {
         posts={posts}
         page={page}
         isRefreshing={isRefreshing}
+        isForSingleGroup={false}
       />
     </View>
   );

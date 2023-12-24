@@ -22,7 +22,7 @@ import {
 import { GroupsRow } from "../types/supabaseTableTypes";
 import { getTimeAgo } from "./utils/dateUtils";
 import { useUser } from "./UserContext";
-import FeedItem from "./FeedItem";
+import FeedItem from "./feed/FeedItem";
 import CommentItem from "./CommentItem";
 
 type Props = {

@@ -8,6 +8,7 @@ type Props = {
   posts: any;
   page: number;
   isRefreshing: boolean;
+  isForSingleGroup: boolean;
 };
 
 const FeedList = ({
@@ -16,6 +17,7 @@ const FeedList = ({
   posts,
   page,
   isRefreshing,
+  isForSingleGroup,
 }: Props) => {
   return (
     <FlatList
@@ -44,7 +46,9 @@ const FeedList = ({
         />
       }
       onEndReachedThreshold={1}
-      renderItem={({ item }) => <FeedItem item={item} />}
+      renderItem={({ item }) => (
+        <FeedItem isForSingleGroup={isForSingleGroup} item={item} />
+      )}
       keyExtractor={(post) => post.id}
     />
   );

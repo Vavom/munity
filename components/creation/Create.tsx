@@ -8,12 +8,12 @@ import {
   TextInput,
   Text,
 } from "react-native-paper";
-import { supabase } from "../supabase/supabaseClient";
-import { GroupsRow } from "../types/supabaseTableTypes";
-import { useUser } from "./UserContext";
+import { supabase } from "../../supabase/supabaseClient";
+import { GroupsRow } from "../../types/supabaseTableTypes";
+import { useUser } from "../UserContext";
 import CreateStepper from "./CreateStepper";
 import { ImagePickerAsset } from "expo-image-picker";
-import ConfirmationModal, { ConfirmationType } from "./ConfirmationModal";
+import ConfirmationModal, { ConfirmationType } from "../ConfirmationModal";
 
 const Create = () => {
   const [step, setStep] = useState(0);
@@ -72,8 +72,6 @@ const Create = () => {
     });
     if (error) {
       Alert.alert(JSON.stringify(error.message));
-    } else {
-      setModal(true);
     }
   };
 
@@ -83,6 +81,7 @@ const Create = () => {
         <ConfirmationModal
           isVisible={modal}
           setVisible={setModal}
+          action={createPost}
           confirmationType={ConfirmationType.POST_CREATION}
         />
       ) : null}
@@ -102,7 +101,7 @@ const Create = () => {
           <Button
             style={{ margin: 20, marginBottom: 5 }}
             mode="contained"
-            onPress={createPost}
+            onPress={() => setModal(true)}
           >
             Post
           </Button>

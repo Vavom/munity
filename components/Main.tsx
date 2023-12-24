@@ -13,7 +13,7 @@ import { GroupsRow } from "../types/supabaseTableTypes";
 import { supabase } from "../supabase/supabaseClient";
 import DrawerMain from "./DrawerMain";
 import { IconSource } from "react-native-paper/lib/typescript/components/Icon";
-import Create from "./Create";
+import Create from "./creation/Create";
 import { darkTheme } from "../themes";
 
 const AccountRoute = () => (

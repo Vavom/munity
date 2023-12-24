@@ -5,12 +5,12 @@ import {
   MD2Colors,
   TextInput,
 } from "react-native-paper";
-import { GroupsRow } from "../types/supabaseTableTypes";
+import { GroupsRow } from "../../types/supabaseTableTypes";
 import { useState, useEffect } from "react";
 import { Alert, View } from "react-native";
-import { supabase } from "../supabase/supabaseClient";
-import { useUser } from "./UserContext";
-import ImageUpload from "./ImageUpload";
+import { supabase } from "../../supabase/supabaseClient";
+import { useUser } from "../UserContext";
+import ImageUpload from "../ImageUpload";
 import { ImagePickerAsset } from "expo-image-picker";
 
 type Props = {

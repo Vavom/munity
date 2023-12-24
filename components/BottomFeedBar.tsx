@@ -6,6 +6,7 @@ import { Button, Divider, Text } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 type Props = {
   item: any;
   numComments: number;
@@ -19,9 +20,11 @@ const BottomFeedBar = ({ item, numComments }: Props) => {
   const [shouldShowInitiallyLiked, setshouldShowInitiallyLiked] =
     useState(containsItemId);
   const addLikesCount = async (x: number) => {
+    //required to stop weird like behaviour
+    await AsyncStorage.removeItem("feed-posts");
     setshouldShowInitiallyLiked(false);
     if (x < 0) {
-      setLikesCount(item.likes);
+      setLikesCount(likesCount - 1);
       if (user) {
         user.liked_posts = user.liked_posts.filter((y) => y !== item.id);
         const { error } = await supabase
@@ -31,7 +34,7 @@ const BottomFeedBar = ({ item, numComments }: Props) => {
         console.log(error);
       }
     } else {
-      setLikesCount(item.likes + x);
+      setLikesCount(likesCount + x);
       if (user) {
         const { error } = await supabase
           .from("Users")

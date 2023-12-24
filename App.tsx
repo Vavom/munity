@@ -27,6 +27,7 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Container = () => {
   const { userAuth, user } = useUser();
@@ -68,7 +69,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <UserContextProvider>
-        <Container />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Container />
+        </GestureHandlerRootView>
       </UserContextProvider>
     </SafeAreaProvider>
   );

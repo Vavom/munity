@@ -1,16 +1,17 @@
 import { Card, Divider, TouchableRipple } from "react-native-paper";
-import { getTimeAgo } from "./utils/dateUtils";
+import { getTimeAgo } from "../utils/dateUtils";
 import { useState } from "react";
-import SinglePostView from "./SinglePostView";
+import SinglePostView from "../post/SinglePostView";
 import React from "react";
-import { useAppTheme } from "../themes";
+import { useAppTheme } from "../../themes";
 import FeedItemLayout from "./FeedItemLayout";
 import { View } from "react-native";
 
 type Props = {
   item: any;
+  isForSingleGroup: boolean;
 };
-const FeedItem = ({ item }: Props) => {
+const FeedItem = ({ item, isForSingleGroup }: Props) => {
   const theme = useAppTheme();
   const [visible, setVisible] = useState(false);
   const [clickedPost, setClickedPost] = useState<any>(null);
@@ -32,7 +33,7 @@ const FeedItem = ({ item }: Props) => {
         }}
         key={item.id}
       >
-        <FeedItemLayout item={item} />
+        <FeedItemLayout isForSingleGroup={isForSingleGroup} item={item} />
       </TouchableRipple>
     </>
   );

@@ -3,6 +3,7 @@ import stringToColor from "./utils/colourUtils";
 import { Avatar, Text } from "react-native-paper";
 import GradientButton from "./GradientButton";
 import { GroupsRow } from "../types/supabaseTableTypes";
+import { useUser } from "./UserContext";
 
 type Props = {
   group: GroupsRow;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const SearchItem = ({ group, groupIds, joinGroup }: Props) => {
+  const { refetchUser } = useUser();
   return (
     <View
       style={{
@@ -48,6 +50,7 @@ const SearchItem = ({ group, groupIds, joinGroup }: Props) => {
           mode="contained"
           onPress={(e) => {
             joinGroup(group.id);
+            refetchUser();
           }}
         >
           {groupIds.some((id: number) => id === group.id) ? "Joined" : "Join"}

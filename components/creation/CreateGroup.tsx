@@ -9,11 +9,11 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
-import { Styles } from "../constants";
-import Account from "./Account";
-import { supabase } from "../supabase/supabaseClient";
-import { useUser } from "./UserContext";
-import Feed from "./Feed";
+import { Styles } from "../../constants";
+import Account from "../Account";
+import { supabase } from "../../supabase/supabaseClient";
+import { useUser } from "../UserContext";
+import Feed from "../feed/Feed";
 
 const CreateGroup = () => {
   const { userAuth: user } = useUser();

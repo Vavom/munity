@@ -1,16 +1,17 @@
 import { View } from "react-native";
-import { useAppTheme } from "../themes";
-import BucketImage from "./BucketImage";
-import PostHeaderInfo from "./PostHeaderInfo";
-import { Divider, Text } from "react-native-paper";
-import BottomFeedBar from "./BottomFeedBar";
-import { supabase } from "../supabase/supabaseClient";
-import { useEffect, useState } from "react";
+import { useAppTheme } from "../../themes";
+import BucketImage from "../BucketImage";
+import PostHeaderInfo from "../PostHeaderInfo";
+import { Divider, Text, TouchableRipple } from "react-native-paper";
+import BottomFeedBar from "../BottomFeedBar";
+import { supabase } from "../../supabase/supabaseClient";
+import { SetStateAction, useEffect, useState } from "react";
 type Props = {
   item: any;
+  isForSingleGroup: boolean;
 };
 
-const FeedItemLayout = ({ item }: Props) => {
+const FeedItemLayout = ({ item, isForSingleGroup }: Props) => {
   const theme = useAppTheme();
   const [numComments, setNumComments] = useState(0);
 
@@ -32,7 +33,8 @@ const FeedItemLayout = ({ item }: Props) => {
   return (
     <>
       <View style={{ marginHorizontal: 8, marginVertical: 12 }}>
-        <PostHeaderInfo item={item} />
+        <PostHeaderInfo isForSingleGroup={isForSingleGroup} item={item} />
+
         <Text style={{ marginBottom: 5 }} variant="titleLarge">
           {item.title}
         </Text>

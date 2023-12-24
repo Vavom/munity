@@ -7,7 +7,7 @@ import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
 import { useState } from "react";
 import { GroupsRow } from "../types/supabaseTableTypes";
-import CreateGroup from "./CreateGroup";
+import CreateGroup from "./creation/CreateGroup";
 
 const Groups = () => {
   const { userAuth: user } = useUser();
