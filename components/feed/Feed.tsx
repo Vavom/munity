@@ -40,6 +40,11 @@ const Feed = () => {
   const PAGE_LENGTH = 10;
 
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
+    await AsyncStorage.setItem(
+      "fetch-time",
+      JSON.stringify(new Date().getTime())
+    );
+    console.log("called");
     await AsyncStorage.removeItem("feed-posts");
     if (!user) {
       Alert.alert("User does not exist");
