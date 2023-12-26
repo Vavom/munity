@@ -6,9 +6,10 @@ import React from "react";
 import { useAppTheme } from "../../themes";
 import FeedItemLayout from "./FeedItemLayout";
 import { View } from "react-native";
+import { PostsRow } from "../../types/supabaseTableTypes";
 
 type Props = {
-  item: any;
+  item: PostsRow;
   isForSingleGroup: boolean;
 };
 const FeedItem = ({ item, isForSingleGroup }: Props) => {

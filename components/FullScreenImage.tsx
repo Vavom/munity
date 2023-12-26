@@ -1,13 +1,6 @@
 import React, { useState } from "react";
-import {
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
-  Image,
-  Animated,
-} from "react-native";
+import { TouchableWithoutFeedback, View, Animated } from "react-native";
 
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppTheme } from "../themes";
 import { Portal, Modal } from "react-native-paper";
 import ImageViewer from "react-native-reanimated-image-viewer";
@@ -20,7 +13,6 @@ type Props = {
 const FullScreenImage = ({ imageUrl, height }: Props) => {
   const [isFullScreen, setFullScreen] = useState(false);
   const paperTheme = useAppTheme();
-  const [visible, setVisible] = useState(false);
   const toggleFullScreen = () => {
     setFullScreen(!isFullScreen);
   };

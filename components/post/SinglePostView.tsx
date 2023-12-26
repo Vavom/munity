@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Portal,
   Modal,
   Text,
-  Card,
   ActivityIndicator,
   MD2Colors,
   Divider,
   Appbar,
-  TextInput,
   Button,
 } from "react-native-paper";
 import { supabase } from "../../supabase/supabaseClient";
@@ -16,21 +14,16 @@ import {
   Alert,
   View,
   StyleSheet,
-  FlatList,
   RefreshControl,
   Animated,
-  ScrollView,
 } from "react-native";
-import { GroupsRow } from "../../types/supabaseTableTypes";
-import { getTimeAgo } from "../utils/dateUtils";
 import { useUser } from "../UserContext";
-import FeedItem from "../feed/FeedItem";
 import CommentItem from "../CommentItem";
-import SingleCommentView from "../SingleCommentView";
 import React from "react";
 import { useAppTheme } from "../../themes";
 import PostHeaderInfo from "../PostHeaderInfo";
 import BucketImage from "../BucketImage";
+import AddCommentModal from "./AddCommentModal";
 
 type Props = {
   visible: boolean;
@@ -48,6 +41,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentPage, setPage] = useState(0);
   const [stopRefreshing, setStopRefreshing] = useState(false);
+  const [visibleComment, setVisibleComment] = useState(false);
 
   const fetchComments = async (shouldClearData: boolean, page: number) => {
     if (stopRefreshing) {
@@ -75,17 +69,6 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
       }
     }
     setIsRefreshing(false);
-  };
-
-  const commentSubmit = async () => {
-    const { error } = await supabase.from("Comments").insert({
-      post: post.id,
-      user: user?.id,
-      parent_comment: null,
-      content: comment,
-      name: user?.user_metadata.name,
-    });
-    if (error) Alert.alert(JSON.stringify(error.message));
   };
 
   return (
@@ -159,6 +142,11 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
             keyExtractor={(item) => item.id}
           />
         </View>
+        <AddCommentModal
+          visible={visibleComment}
+          setVisible={setVisibleComment}
+          post={post}
+        />
         <View
           style={{
             ...styles.container,
@@ -174,7 +162,14 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
             zIndex: 10,
           }}
         >
-          <Button icon={"message-outline"} mode="text" textColor={"grey"}>
+          <Button
+            onPress={() => setVisibleComment(true)}
+            icon={"message-outline"}
+            mode="text"
+            textColor={"grey"}
+            contentStyle={{ alignSelf: "flex-start" }}
+            style={styles.button}
+          >
             Comment
           </Button>
         </View>
@@ -188,14 +183,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
   },
   textInput: {
     flex: 1, // Take up the available space
     marginRight: 16, // Add some margin between TextInput and Button
   },
   button: {
-    width: 100, // Set a fixed width for the button
+    width: "100%", // Set a fixed width for the button
+    borderRadius: 10,
   },
 });
 
