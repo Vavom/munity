@@ -37,7 +37,7 @@ const Feed = () => {
   const [page, setPage] = useState(0);
   const [groupIds, setGroupIds] = useState<any>([]);
   const { user, refetchUser } = useUser();
-  const PAGE_LENGTH = 6;
+  const PAGE_LENGTH = 10;
 
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
     await AsyncStorage.removeItem("feed-posts");

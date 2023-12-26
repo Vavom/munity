@@ -21,9 +21,10 @@ import { useUser } from "../UserContext";
 import CommentItem from "../CommentItem";
 import React from "react";
 import { useAppTheme } from "../../themes";
-import PostHeaderInfo from "../PostHeaderInfo";
+import PostHeaderInfo from "./PostHeaderInfo";
 import BucketImage from "../BucketImage";
 import AddCommentModal from "./AddCommentModal";
+import PostContentInfo from "./PostContentInfo";
 
 type Props = {
   visible: boolean;
@@ -44,7 +45,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const [visibleComment, setVisibleComment] = useState(false);
 
   const fetchComments = async (shouldClearData: boolean, page: number) => {
-    if (stopRefreshing) {
+    if (!shouldClearData && stopRefreshing) {
       return;
     }
     setIsRefreshing(true);
@@ -94,11 +95,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
               <>
                 <PostHeaderInfo item={post} />
                 <View style={{ marginBottom: 4 }}>
-                  <Text variant="titleLarge">{post.title}</Text>
-                  {post.media != null ? (
-                    <BucketImage path={post.media} />
-                  ) : null}
-                  <Text variant="bodyMedium">{post.content}</Text>
+                  <PostContentInfo item={post} />
                   <Divider style={{ marginVertical: 20 }} />
                 </View>
               </>

@@ -25,7 +25,9 @@ import { useUser } from "../UserContext";
 import FeedItem from "../feed/FeedItem";
 import CommentItem from "../CommentItem";
 import { useAppTheme } from "../../themes";
-import PostHeaderInfo from "../PostHeaderInfo";
+import PostHeaderInfo from "./PostHeaderInfo";
+import PostContentInfo from "./PostContentInfo";
+import GradientButton from "../GradientButton";
 
 type Props = {
   visible: boolean;
@@ -36,8 +38,11 @@ type Props = {
 const AddCommentModal = ({ visible, setVisible, post }: Props) => {
   const { userAuth: user } = useUser();
   const [comment, setComment] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
   const paperTheme = useAppTheme();
+
   const commentSubmit = async () => {
+    setIsLoading(true);
     const { error } = await supabase.from("Comments").insert({
       post: post.id,
       user: user?.id,
@@ -46,6 +51,8 @@ const AddCommentModal = ({ visible, setVisible, post }: Props) => {
       name: user?.user_metadata.name,
     });
     if (error) Alert.alert(JSON.stringify(error.message));
+    setIsLoading(false);
+    setVisible(false);
   };
 
   return (
@@ -59,6 +66,7 @@ const AddCommentModal = ({ visible, setVisible, post }: Props) => {
           <Appbar.BackAction onPress={() => setVisible(false)} />
           <View style={{ marginHorizontal: 20 }}>
             <PostHeaderInfo item={post} />
+            <PostContentInfo item={post} />
             <Divider style={{ marginVertical: 20 }} />
             <View style={styles.container}>
               <TextInput
@@ -69,14 +77,18 @@ const AddCommentModal = ({ visible, setVisible, post }: Props) => {
                 onChangeText={(comment) => setComment(comment)}
                 autoFocus={true}
               />
-              <Button
-                mode="elevated"
-                disabled={comment.length === 0}
-                onPress={commentSubmit}
-                style={styles.button}
-              >
-                Submit
-              </Button>
+              <View style={styles.button}>
+                <GradientButton
+                  buttonColor="transparent"
+                  contentStyle={{ width: "auto" }}
+                  loading={isLoading}
+                  mode="contained"
+                  disabled={comment.length === 0}
+                  onPress={commentSubmit}
+                >
+                  Submit
+                </GradientButton>
+              </View>
             </View>
           </View>
         </View>
@@ -95,9 +107,8 @@ const styles = StyleSheet.create({
     marginRight: 16, // Add some margin between TextInput and Button
   },
   button: {
-    marginVertical: 20,
+    marginVertical: 10,
     alignSelf: "flex-end",
-    width: 100, // Set a fixed width for the button
   },
 });
 
