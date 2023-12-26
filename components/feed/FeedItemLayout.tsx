@@ -48,7 +48,7 @@ const FeedItemLayout = ({ item, isForSingleGroup }: Props) => {
             {item.content}
           </Text>
         )}
-        <BottomFeedBar numComments={numComments} item={item} />
+        <BottomFeedBar numComments={item.numComments} item={item} />
       </View>
       <Divider style={{ opacity: 0.4 }} />
     </>

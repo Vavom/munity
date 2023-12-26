@@ -46,6 +46,7 @@ const FeedList = ({
         />
       }
       onEndReachedThreshold={1}
+      refreshing={isRefreshing}
       renderItem={({ item }) => (
         <FeedItem isForSingleGroup={isForSingleGroup} item={item} />
       )}

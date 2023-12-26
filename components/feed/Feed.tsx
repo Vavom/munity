@@ -46,7 +46,6 @@ const Feed = () => {
       return;
     }
     setIsRefreshing(true);
-
     const storedPosts = await AsyncStorage.getItem("feed-posts");
     const pageStored = JSON.parse(
       (await AsyncStorage.getItem("feed-posts-page")) ?? "0"
@@ -55,6 +54,10 @@ const Feed = () => {
       setPosts(JSON.parse(storedPosts));
       setPage(pageStored);
     } else {
+      //this shows a clean feed as we wipe the feed object
+      if (shouldClearData) {
+        setPosts([]);
+      }
       await AsyncStorage.removeItem("feed-posts-page");
 
       const { data, error } = await supabase
@@ -68,20 +71,23 @@ const Feed = () => {
         Alert.alert(JSON.stringify(error.message));
         console.log(error.message);
       } else {
+        const posts = data || [];
+        const comments = await getComments(posts);
+        const postData = posts.map((post, index) => ({
+          ...post,
+          numComments: comments[index],
+        }));
         if (shouldClearData) {
-          setPosts(() => {
-            // AsyncStorage.setItem("feed-posts", JSON.stringify(data));
-            return data;
-          });
+          setPosts(postData);
           setPage(1);
           await AsyncStorage.setItem("feed-posts-page", JSON.stringify(1));
         } else {
           setPosts((prevData: any) => {
             AsyncStorage.setItem(
               "feed-posts",
-              JSON.stringify([...prevData, ...data])
+              JSON.stringify([...prevData, ...postData])
             );
-            return [...prevData, ...data];
+            return [...prevData, ...postData];
           });
           setPage(page + 1);
           await AsyncStorage.setItem(
@@ -106,6 +112,23 @@ const Feed = () => {
       />
     </View>
   );
+};
+
+const getComments = async (posts: PostsRow[]) => {
+  const commentPromises = posts.map(async (post) => {
+    const { data, error } = await supabase
+      .from("Comments")
+      .select("id")
+      .eq("post", post.id);
+
+    if (error) {
+      console.log(error);
+      return 0;
+    }
+
+    return data.length;
+  });
+  return await Promise.all(commentPromises);
 };
 
 export const baseStylesForApp = StyleSheet.create({
