@@ -6,8 +6,9 @@ import { Divider, Text, TouchableRipple } from "react-native-paper";
 import BottomFeedBar from "../BottomFeedBar";
 import { supabase } from "../../supabase/supabaseClient";
 import { SetStateAction, useEffect, useState } from "react";
+import { PostsRow } from "../../types/supabaseTableTypes";
 type Props = {
-  item: any;
+  item: PostsRow;
   isForSingleGroup: boolean;
 };
 

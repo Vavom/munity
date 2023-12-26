@@ -42,7 +42,9 @@ const Search = () => {
       .select("*")
       .single();
 
-    user.groups = [...new Set([...user.groups, ...groupIds, id])];
+    if (data) {
+      user.groups = data?.groups;
+    }
 
     //Update group IDs
 

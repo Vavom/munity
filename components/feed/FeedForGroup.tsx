@@ -5,17 +5,16 @@ import { Styles } from "../../constants";
 import { supabase } from "../../supabase/supabaseClient";
 import { useState } from "react";
 import { useUser } from "../UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import FeedList from "./FeedList";
 import { PostsRow } from "../../types/supabaseTableTypes";
-import { Appbar, Avatar, Modal, Portal, Text } from "react-native-paper";
+import { Appbar, Avatar, Modal, Portal } from "react-native-paper";
 import { useAppTheme } from "../../themes";
 import stringToColor from "../utils/colourUtils";
 
 type Props = {
   group: any;
   visible: boolean;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setVisible: (visible: boolean) => void;
 };
 
 const FeedForGroup = ({ visible, setVisible, group }: Props) => {

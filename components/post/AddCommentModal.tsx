@@ -11,7 +11,7 @@ import {
   TextInput,
   Button,
 } from "react-native-paper";
-import { supabase } from "../supabase/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
 import {
   Alert,
   View,
@@ -19,28 +19,29 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
-import { GroupsRow } from "../types/supabaseTableTypes";
-import { getTimeAgo } from "./utils/dateUtils";
-import { useUser } from "./UserContext";
-import FeedItem from "./feed/FeedItem";
-import CommentItem from "./CommentItem";
+import { GroupsRow, PostsRow } from "../../types/supabaseTableTypes";
+import { getTimeAgo } from "../utils/dateUtils";
+import { useUser } from "../UserContext";
+import FeedItem from "../feed/FeedItem";
+import CommentItem from "../CommentItem";
+import { useAppTheme } from "../../themes";
+import PostHeaderInfo from "../PostHeaderInfo";
 
 type Props = {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  commentItem: any;
+  post: PostsRow;
 };
 
-const SingleCommentView = ({ visible, setVisible, commentItem }: Props) => {
+const AddCommentModal = ({ visible, setVisible, post }: Props) => {
   const { userAuth: user } = useUser();
-  const containerStyle = { backgroundColor: "white", padding: 10 };
   const [comment, setComment] = useState<string>("");
-
+  const paperTheme = useAppTheme();
   const commentSubmit = async () => {
     const { error } = await supabase.from("Comments").insert({
-      post: commentItem.post,
+      post: post.id,
       user: user?.id,
-      parent_comment: commentItem.id,
+      parent_comment: null,
       content: comment,
       name: user?.user_metadata.name,
     });
@@ -48,35 +49,28 @@ const SingleCommentView = ({ visible, setVisible, commentItem }: Props) => {
   };
 
   return (
-    <Portal>
+    <Portal theme={paperTheme}>
       <Modal
-        style={{ height: "100%" }}
         visible={visible}
         onDismiss={() => setVisible(false)}
-        contentContainerStyle={containerStyle}
-        theme={{
-          colors: {
-            backdrop: "transparent",
-          },
-        }}
+        theme={paperTheme}
       >
         <View style={{ height: "100%" }}>
           <Appbar.BackAction onPress={() => setVisible(false)} />
           <View style={{ marginHorizontal: 20 }}>
-            <Text style={{ marginBottom: 10 }} variant="bodySmall">
-              {commentItem.name + " • " + getTimeAgo(commentItem.created_at)}
-            </Text>
-            <Text variant="bodyMedium">{commentItem.content}</Text>
+            <PostHeaderInfo item={post} />
             <Divider style={{ marginVertical: 20 }} />
             <View style={styles.container}>
               <TextInput
                 label="Comment"
+                mode="flat"
                 value={comment}
+                style={{ backgroundColor: paperTheme.colors.background }}
                 onChangeText={(comment) => setComment(comment)}
-                style={styles.textInput}
+                autoFocus={true}
               />
               <Button
-                mode="contained"
+                mode="elevated"
                 disabled={comment.length === 0}
                 onPress={commentSubmit}
                 style={styles.button}
@@ -93,18 +87,18 @@ const SingleCommentView = ({ visible, setVisible, commentItem }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
+    flexDirection: "column",
+    marginVertical: 20,
   },
   textInput: {
     flex: 1, // Take up the available space
     marginRight: 16, // Add some margin between TextInput and Button
   },
   button: {
+    marginVertical: 20,
+    alignSelf: "flex-end",
     width: 100, // Set a fixed width for the button
   },
 });
 
-export default SingleCommentView;
+export default AddCommentModal;

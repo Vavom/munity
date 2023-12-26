@@ -20,7 +20,7 @@ import {
 } from "react-native";
 import { supabase } from "../supabase/supabaseClient";
 import { useUser } from "./UserContext";
-import SingleCommentView from "./SingleCommentView";
+import SingleCommentView from "./post/SingleCommentView";
 import { useAppTheme } from "../themes";
 import stringToColor from "./utils/colourUtils";
 
