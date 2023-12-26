@@ -88,11 +88,12 @@ const Feed = () => {
           await AsyncStorage.setItem("feed-posts-page", JSON.stringify(1));
         } else {
           setPosts((prevData: any) => {
+            const updatedPostData = [...prevData, ...postData]
             AsyncStorage.setItem(
               "feed-posts",
-              JSON.stringify([...prevData, ...postData])
+              JSON.stringify(updatedPostData)
             );
-            return [...prevData, ...postData];
+            return updatedPostData;
           });
           setPage(page + 1);
           await AsyncStorage.setItem(
