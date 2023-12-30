@@ -17,33 +17,35 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = {
   isPullDownRefreshing: boolean;
+  setIsPullDownRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
   fetchPosts: any;
   posts: any;
   page: number;
   isRefreshing: boolean;
   isForSingleGroup: boolean;
 };
-
+const REFRESH_BUTTON_OFFSET_Y = 70;
 const FeedList = ({
   isPullDownRefreshing,
+  setIsPullDownRefreshing,
   fetchPosts,
   posts,
   page,
   isRefreshing,
   isForSingleGroup,
 }: Props) => {
-  const [showTopButton, setShowTopButton] = useState(false);
+  const [showTopButton, setShowTopButton] = useState(true);
 
   const scrollY = useSharedValue(0);
-  const scrollY100 = useSharedValue(100);
+  const scrollY100 = useSharedValue(REFRESH_BUTTON_OFFSET_Y);
   const prevScrollY = useSharedValue(0);
 
   const translateY = useAnimatedStyle(() => {
-    const translate = 100 - scrollY100.value + scrollY.value - 70;
+    const translate = scrollY.value - scrollY100.value;
     return {
       transform: [
         {
-          translateY: (translate > 30 ? 30 : translate) - 30,
+          translateY: (translate > 0 ? 0 : -translate) - 70,
         },
       ],
     };
@@ -69,10 +71,10 @@ const FeedList = ({
 
   return (
     <>
-      {showTopButton && (
+      {showTopButton && !isForSingleGroup && (
         <Animated.View
           style={[
-            { zIndex: 1000, alignSelf: "center", position: "absolute" },
+            { zIndex: 9, alignSelf: "center", position: "absolute" },
             translateY,
           ]}
         >
@@ -81,7 +83,9 @@ const FeedList = ({
             contentStyle={{ width: "auto" }}
             mode="contained"
             onPress={() => {
+              setIsPullDownRefreshing(true);
               fetchPosts(true, 0);
+              setShowTopButton(false);
             }}
           >
             Refresh
@@ -106,16 +110,16 @@ const FeedList = ({
           scrollY.value = Math.round(event.nativeEvent.contentOffset.y);
           if (
             prevScrollY.value < scrollY.value &&
-            100 - scrollY100.value + scrollY.value - 70 >= 30
+            scrollY.value - scrollY100.value >= 0
           ) {
             scrollY100.value = Math.round(event.nativeEvent.contentOffset.y);
           }
           if (
             prevScrollY.value > scrollY.value &&
-            scrollY100.value - scrollY.value >= 100
+            scrollY100.value - scrollY.value >= REFRESH_BUTTON_OFFSET_Y
           ) {
             scrollY100.value = Math.round(
-              event.nativeEvent.contentOffset.y + 100
+              event.nativeEvent.contentOffset.y + REFRESH_BUTTON_OFFSET_Y
             );
           }
         }}

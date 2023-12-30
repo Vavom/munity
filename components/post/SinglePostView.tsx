@@ -32,42 +32,41 @@ type Props = {
   post: any;
 };
 
+export interface Comment {
+  content: string;
+  created_at: string;
+  id: number;
+  name: string;
+  parent_comment: number | null;
+  post: number;
+  user: string;
+  child_comments?: Comment[];
+}
+
 const SinglePostView = ({ visible, setVisible, post }: Props) => {
   const paperTheme = useAppTheme();
-  const { userAuth: user } = useUser();
-  const [comment, setComment] = useState<string>("");
-  const [comments, setComments] = useState<any>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
-  const PAGE_LENGTH = 6;
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [currentPage, setPage] = useState(0);
   const [stopRefreshing, setStopRefreshing] = useState(false);
+  const [hasDoneFirstFetch, setHasDoneFirstFetch] = useState(false);
   const [visibleComment, setVisibleComment] = useState(false);
 
-  const fetchComments = async (shouldClearData: boolean, page: number) => {
-    if (!shouldClearData && stopRefreshing) {
+  const fetchComments = async () => {
+    if (stopRefreshing) {
       return;
     }
     setIsRefreshing(true);
     const { data, error } = await supabase
       .from("Comments")
       .select("*")
-      .is("parent_comment", null)
       .in("post", [post.id])
-      .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
       .order("created_at", { ascending: false });
     if (error) {
       Alert.alert(JSON.stringify(error.message));
       console.log(error.message);
     } else {
-      if (shouldClearData) {
-        setComments(data);
-        setPage(1);
-      } else {
-        setStopRefreshing(data.length < 1);
-        setComments((prevData: any) => [...prevData, ...data]);
-        setPage(page + 1);
-      }
+      setComments(nestComments(data));
     }
     setIsRefreshing(false);
   };
@@ -109,15 +108,16 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
               <RefreshControl
                 refreshing={isPullDownRefreshing}
                 onRefresh={() => {
-                  fetchComments(true, 0);
+                  fetchComments();
                 }}
                 colors={["#3498db"]} // Customize the loading indicator color
               />
             }
             data={comments}
             onEndReached={() => {
-              if (!isRefreshing) {
-                fetchComments(false, currentPage);
+              if (!isRefreshing && !hasDoneFirstFetch) {
+                setHasDoneFirstFetch(true);
+                fetchComments();
               }
             }}
             ListFooterComponent={
@@ -136,7 +136,7 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
             renderItem={({ item }) => {
               return <CommentItem commentItem={item} />;
             }}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
           />
         </View>
         <AddCommentModal
@@ -174,6 +174,34 @@ const SinglePostView = ({ visible, setVisible, post }: Props) => {
     </Portal>
   );
 };
+
+function nestComments(comments: Comment[]) {
+  const commentMap = new Map();
+
+  // Create a map for quick lookups based on id
+  comments.forEach((comment) => {
+    comment.child_comments = [];
+    commentMap.set(comment.id, comment);
+  });
+
+  const nestedComments: Comment[] = [];
+
+  // Iterate through comments to build the nested structure
+  comments.forEach((comment) => {
+    if (comment.parent_comment === null) {
+      // Top-level comment
+      nestedComments.push(comment);
+    } else {
+      // Child comment, add it to the parent's children array
+      const parentComment = commentMap.get(comment.parent_comment);
+      if (parentComment) {
+        parentComment.child_comments.push(comment);
+      }
+    }
+  });
+
+  return nestedComments;
+}
 
 const styles = StyleSheet.create({
   container: {

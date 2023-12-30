@@ -103,12 +103,14 @@ const Feed = () => {
       }
     }
     setIsRefreshing(false);
+    setIsPullDownRefreshing(false);
   };
 
   return (
     <View style={{ flex: 1 }}>
       <FeedList
         isPullDownRefreshing={isPullDownRefreshing}
+        setIsPullDownRefreshing={setIsPullDownRefreshing}
         fetchPosts={fetchPosts}
         posts={posts}
         page={page}

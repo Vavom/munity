@@ -1,33 +1,14 @@
-import { useEffect, useState } from "react";
-import {
-  Portal,
-  Modal,
-  Text,
-  Card,
-  ActivityIndicator,
-  MD2Colors,
-  Divider,
-  Appbar,
-  TextInput,
-  Button,
-} from "react-native-paper";
+import { useRef, useState } from "react";
+import { Portal, Modal, Divider, Appbar, TextInput } from "react-native-paper";
 import { supabase } from "../../supabase/supabaseClient";
-import {
-  Alert,
-  View,
-  StyleSheet,
-  FlatList,
-  RefreshControl,
-} from "react-native";
-import { GroupsRow, PostsRow } from "../../types/supabaseTableTypes";
-import { getTimeAgo } from "../utils/dateUtils";
+import { Alert, View, StyleSheet } from "react-native";
+import { PostsRow } from "../../types/supabaseTableTypes";
 import { useUser } from "../UserContext";
-import FeedItem from "../feed/FeedItem";
-import CommentItem from "../CommentItem";
 import { useAppTheme } from "../../themes";
 import PostHeaderInfo from "./PostHeaderInfo";
 import PostContentInfo from "./PostContentInfo";
 import GradientButton from "../GradientButton";
+import { ScrollView } from "react-native-gesture-handler";
 
 type Props = {
   visible: boolean;
@@ -40,6 +21,15 @@ const AddCommentModal = ({ visible, setVisible, post }: Props) => {
   const [comment, setComment] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const paperTheme = useAppTheme();
+  const [text, setText] = useState("type here ...");
+  const textInputRef = useRef(null);
+
+  const handleClick = () => {
+    if (textInputRef.current as any) {
+      let a: any = textInputRef;
+      a.current.focus();
+    }
+  };
 
   const commentSubmit = async () => {
     setIsLoading(true);
@@ -64,33 +54,36 @@ const AddCommentModal = ({ visible, setVisible, post }: Props) => {
       >
         <View style={{ height: "100%" }}>
           <Appbar.BackAction onPress={() => setVisible(false)} />
-          <View style={{ marginHorizontal: 20 }}>
-            <PostHeaderInfo item={post} />
-            <PostContentInfo item={post} />
-            <Divider style={{ marginVertical: 20 }} />
-            <View style={styles.container}>
-              <TextInput
-                label="Comment"
-                mode="flat"
-                value={comment}
-                style={{ backgroundColor: paperTheme.colors.background }}
-                onChangeText={(comment) => setComment(comment)}
-                autoFocus={true}
-              />
-              <View style={styles.button}>
-                <GradientButton
-                  buttonColor="transparent"
-                  contentStyle={{ width: "auto" }}
-                  loading={isLoading}
-                  mode="contained"
-                  disabled={comment.length === 0}
-                  onPress={commentSubmit}
-                >
-                  Submit
-                </GradientButton>
+          <ScrollView>
+            {/* Make content scrollable */}
+            <View style={{ marginHorizontal: 20 }}>
+              <PostHeaderInfo item={post} />
+              <PostContentInfo item={post} />
+              <Divider style={{ marginVertical: 20 }} />
+              <View style={styles.container}>
+                <TextInput
+                  label="Comment"
+                  mode="flat"
+                  value={comment}
+                  style={{ backgroundColor: paperTheme.colors.background }}
+                  onChangeText={(comment) => setComment(comment)}
+                  autoFocus={true}
+                />
+                <View style={styles.button}>
+                  <GradientButton
+                    buttonColor="transparent"
+                    contentStyle={{ width: "auto" }}
+                    loading={isLoading}
+                    mode="contained"
+                    disabled={comment.length === 0}
+                    onPress={commentSubmit}
+                  >
+                    Submit
+                  </GradientButton>
+                </View>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
     </Portal>

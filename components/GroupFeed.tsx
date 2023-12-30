@@ -86,7 +86,9 @@ const GroupFeed = ({ groupId, navigation }: Props) => {
           />
         }
         onEndReachedThreshold={1}
-        renderItem={({ item }) => <FeedItem item={item} />}
+        renderItem={({ item }) => (
+          <FeedItem item={item} isForSingleGroup={true} />
+        )}
         keyExtractor={(post) => post.id}
       />
     </View>
