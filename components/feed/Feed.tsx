@@ -37,16 +37,20 @@ const Feed = () => {
   const [page, setPage] = useState(0);
   const [groupIds, setGroupIds] = useState<any>([]);
   const { user, refetchUser } = useUser();
-  const PAGE_LENGTH = 6;
+  const PAGE_LENGTH = 10;
 
   const fetchPosts = async (shouldClearData: boolean, page: number) => {
+    await AsyncStorage.setItem(
+      "fetch-time",
+      JSON.stringify(new Date().getTime())
+    );
+    console.log("called");
     await AsyncStorage.removeItem("feed-posts");
     if (!user) {
       Alert.alert("User does not exist");
       return;
     }
     setIsRefreshing(true);
-
     const storedPosts = await AsyncStorage.getItem("feed-posts");
     const pageStored = JSON.parse(
       (await AsyncStorage.getItem("feed-posts-page")) ?? "0"
@@ -55,6 +59,10 @@ const Feed = () => {
       setPosts(JSON.parse(storedPosts));
       setPage(pageStored);
     } else {
+      //this shows a clean feed as we wipe the feed object
+      if (shouldClearData) {
+        setPosts([]);
+      }
       await AsyncStorage.removeItem("feed-posts-page");
 
       const { data, error } = await supabase
@@ -68,20 +76,24 @@ const Feed = () => {
         Alert.alert(JSON.stringify(error.message));
         console.log(error.message);
       } else {
+        const posts = data || [];
+        const comments = await getComments(posts);
+        const postData = posts.map((post, index) => ({
+          ...post,
+          numComments: comments[index],
+        }));
         if (shouldClearData) {
-          setPosts(() => {
-            // AsyncStorage.setItem("feed-posts", JSON.stringify(data));
-            return data;
-          });
+          setPosts(postData);
           setPage(1);
           await AsyncStorage.setItem("feed-posts-page", JSON.stringify(1));
         } else {
           setPosts((prevData: any) => {
+            const updatedPostData = [...prevData, ...postData]
             AsyncStorage.setItem(
               "feed-posts",
-              JSON.stringify([...prevData, ...data])
+              JSON.stringify(updatedPostData)
             );
-            return [...prevData, ...data];
+            return updatedPostData;
           });
           setPage(page + 1);
           await AsyncStorage.setItem(
@@ -92,12 +104,14 @@ const Feed = () => {
       }
     }
     setIsRefreshing(false);
+    setIsPullDownRefreshing(false);
   };
 
   return (
     <View style={{ flex: 1 }}>
       <FeedList
         isPullDownRefreshing={isPullDownRefreshing}
+        setIsPullDownRefreshing={setIsPullDownRefreshing}
         fetchPosts={fetchPosts}
         posts={posts}
         page={page}
@@ -106,6 +120,23 @@ const Feed = () => {
       />
     </View>
   );
+};
+
+const getComments = async (posts: PostsRow[]) => {
+  const commentPromises = posts.map(async (post) => {
+    const { data, error } = await supabase
+      .from("Comments")
+      .select("id")
+      .eq("post", post.id);
+
+    if (error) {
+      console.log(error);
+      return 0;
+    }
+
+    return data.length;
+  });
+  return await Promise.all(commentPromises);
 };
 
 export const baseStylesForApp = StyleSheet.create({

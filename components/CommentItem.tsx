@@ -23,49 +23,16 @@ import { useUser } from "./UserContext";
 import SingleCommentView from "./post/SingleCommentView";
 import { useAppTheme } from "../themes";
 import stringToColor from "./utils/colourUtils";
+import { Comment } from "./post/SinglePostView";
 
 type Props = {
-  commentItem: any;
+  commentItem: Comment;
 };
 
 const CommentItem = ({ commentItem }: Props) => {
   const [visible, setVisible] = useState(false);
-  const [comment, setComment] = useState<string>("");
-  const [comments, setComments] = useState<any>([]);
   const [clickedComment, setclickedComment] = useState<any>(null);
-  const { userAuth: user } = useUser();
-  const [isPullDownRefreshing, setIsPullDownRefreshing] = useState(false);
-  const PAGE_LENGTH = 6;
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [page, setPage] = useState(0);
-
-  const fetchComments = async (shouldClearData: boolean, page: number) => {
-    setIsRefreshing(true);
-    const { data, error } = await supabase
-      .from("Comments")
-      .select("*")
-      .eq("parent_comment", commentItem.id)
-      .range(page * PAGE_LENGTH, (page + 1) * PAGE_LENGTH - 1)
-      .order("created_at", { ascending: false })
-      .limit(PAGE_LENGTH);
-    if (error) {
-      Alert.alert(JSON.stringify(error.message));
-      console.log(error.message);
-    } else {
-      if (shouldClearData) {
-        setComments(data);
-        setPage(1);
-      } else {
-        setComments((prevData: any) => [...prevData, ...data]);
-        setPage(page + 1);
-      }
-    }
-    setIsRefreshing(false);
-  };
-
-  useEffect(() => {
-    fetchComments(false, 0);
-  }, [commentItem]);
 
   const theme = useAppTheme();
 
@@ -95,13 +62,13 @@ const CommentItem = ({ commentItem }: Props) => {
               visible={visible}
             />
           ) : null}
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", marginBottom: 8 }}>
             <Avatar.Icon
               style={{
                 backgroundColor: stringToColor(commentItem.user),
-                marginEnd: 8,
+                marginEnd: 4,
               }}
-              size={24}
+              size={20}
               icon="account-circle"
             />
             <View style={{ marginVertical: 4, flexDirection: "row" }}>
@@ -114,26 +81,17 @@ const CommentItem = ({ commentItem }: Props) => {
             </View>
           </View>
           <Text variant="bodyMedium">{commentItem.content}</Text>
-          {comments.length > 0 ? (
+          {commentItem.child_comments &&
+          commentItem.child_comments.length > 0 ? (
             <FlatList
               style={{ marginHorizontal: 8 }}
               showsVerticalScrollIndicator={false}
-              data={comments}
-              ListFooterComponent={
-                <ActivityIndicator
-                  style={{ margin: 20 }}
-                  animating={isRefreshing}
-                  color={MD2Colors.purple100}
-                />
-              }
+              data={commentItem.child_comments}
               scrollEnabled={false}
               renderItem={({ item }) => {
-                if (item.parent_comment === commentItem.id) {
-                  return <CommentItem commentItem={item} />;
-                }
-                return null;
+                return <CommentItem commentItem={item} />;
               }}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id.toString()}
             />
           ) : null}
         </View>

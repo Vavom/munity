@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { useAppTheme } from "../themes";
 import BucketImage from "./BucketImage";
-import PostHeaderInfo from "./PostHeaderInfo";
+import PostHeaderInfo from "./post/PostHeaderInfo";
 import { Button, Divider, Text } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase/supabaseClient";

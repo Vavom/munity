@@ -5,14 +5,15 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
-import { getTimeAgo } from "./utils/dateUtils";
+import { getTimeAgo } from "../utils/dateUtils";
 import { useState } from "react";
-import SinglePostView from "./post/SinglePostView";
+import SinglePostView from "./SinglePostView";
 import React from "react";
-import { useAppTheme } from "../themes";
+import { useAppTheme } from "../../themes";
 import { View } from "react-native";
-import stringToColor from "./utils/colourUtils";
-import FeedForGroup from "./feed/FeedForGroup";
+import stringToColor from "../utils/colourUtils";
+import FeedForGroup from "../feed/FeedForGroup";
+import { PostsRow } from "../../types/supabaseTableTypes";
 
 type Props = {
   item: any;
